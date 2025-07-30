@@ -55,7 +55,7 @@ const ContactForm = () => {
 
   return (
     <section className="bg-gray-100 py-16 px-4">
-      <div className="max-w-6xl mx-auto text-center">
+      <div className="mt-40 max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-green-700 mb-4 leading-tight">
           Connect with Us
         </h2>
@@ -154,14 +154,15 @@ const ContactForm = () => {
               placeholder="Escreva sua mensagem..."
               className="p-3 rounded-md border border-gray-300 w-full"
             ></textarea>
-          </div>
+          
 
           <button
             type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md md:col-span-2 transition duration-300"
+            className="mt-5 bg-green-600 hover:bg-green-700 text-white px-10 py-3 rounded-full mx-auto block transition duration-300"
           >
             Submit
           </button>
+          </div>
         </form>
       </div>
     </section>
