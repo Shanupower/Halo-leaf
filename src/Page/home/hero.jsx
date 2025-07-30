@@ -61,6 +61,24 @@ export const Hero = () => {
             Contact Us
           </a>
         </div>
+        <button
+    onClick={() => {
+      const nextSection = document.getElementById('best-sell-section');
+      if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth' });
+    }}
+    className="absolute bottom-10 animate-bounce bg-[var(--color-primary)]"
+    aria-label="Scroll Down"
+  >
+    <svg
+      className="w-8 h-8 text-green-600"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
       </div>
     </section>
   );
