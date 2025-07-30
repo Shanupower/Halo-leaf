@@ -45,12 +45,14 @@ export const Header = () => {
   return (
     <div
       className={`
-        sticky top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-[8%] sm:px-[5%]
-        transition-all duration-300
-        ${scrolled
-          ? "bg-white/30 backdrop-blur-xl border-b border-white/40 shadow-2xl"
-          : "bg-transparent"}
-      `}
+        ${scrolled ? "sticky" : "absolute"} top-0 left-0 w-full z-50
+    flex items-center justify-between
+    px-4 md:px-[8%] sm:px-[5%]
+    transition-all duration-300
+    ${scrolled
+      ? "bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-md"
+      : "bg-transparent"}
+  `}
     >
       {/* Particles in the background */}
       <Particles
