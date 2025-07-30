@@ -51,9 +51,9 @@ export const BestSell = () => (
             frontComponent={
               <>
               <motion.div
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 400 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+                transition={{ duration: 1, ease: "easeOut" }}
                 viewport={{ once: true }}
               >
               <img
