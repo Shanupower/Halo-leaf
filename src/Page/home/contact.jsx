@@ -55,7 +55,7 @@ const ContactForm = () => {
 
   return (
     <section className="bg-gray-100 py-16 px-4">
-      <div className="mt-40 max-w-6xl mx-auto text-center">
+      <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-green-700 mb-4 leading-tight">
           Connect with Us
         </h2>
@@ -76,7 +76,7 @@ const ContactForm = () => {
               type="text"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Qual seu nome?"
+              placeholder="Name"
               className="p-3 rounded-md border border-gray-300 w-full"
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -88,7 +88,7 @@ const ContactForm = () => {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="E seu melhor e-mail?"
+              placeholder="Email"
               className="p-3 rounded-md border border-gray-300 w-full"
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -100,7 +100,7 @@ const ContactForm = () => {
               type="tel"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Informe seu telefone..."
+              placeholder="Phone Number"
               className="p-3 rounded-md border border-gray-300 w-full"
             />
             {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
@@ -112,7 +112,7 @@ const ContactForm = () => {
               type="text"
               value={formData.location}
               onChange={handleChange}
-              placeholder="E de onde nos escreve?"
+              placeholder="Location"
               className="p-3 rounded-md border border-gray-300 w-full"
             />
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
@@ -124,7 +124,7 @@ const ContactForm = () => {
               type="text"
               value={formData.subject}
               onChange={handleChange}
-              placeholder="Sobre qual assunto quer tratar?"
+              placeholder="Subject"
               className="p-3 rounded-md border border-gray-300 w-full"
             />
             {errors.subject && <p className="text-red-500 text-sm mt-1">{errors.subject}</p>}
@@ -137,7 +137,7 @@ const ContactForm = () => {
               onChange={handleChange}
               className="p-3 rounded-md border border-gray-300 w-full"
             >
-              <option value="">Escolha o departamento...</option>
+              <option value="">Select Department</option>
               <option value="Atendimento">Atendimento</option>
               <option value="Suporte Técnico">Suporte Técnico</option>
               <option value="Outros">Outros</option>
@@ -151,7 +151,7 @@ const ContactForm = () => {
               rows="4"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Escreva sua mensagem..."
+              placeholder="Message"
               className="p-3 rounded-md border border-gray-300 w-full"
             ></textarea>
           
