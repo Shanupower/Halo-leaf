@@ -66,11 +66,11 @@ export const Hero = () => {
       const nextSection = document.getElementById('best-sell-section');
       if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth' });
     }}
-    className="absolute bottom-10 animate-bounce bg-[var(--color-primary)]"
+    className="absolute bottom-10 animate-bounce"
     aria-label="Scroll Down"
   >
     <svg
-      className="w-8 h-8 text-green-600"
+      className="w-8 h-8 text-white-600"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"

@@ -1,72 +1,53 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  EffectCoverflow,
-  Pagination,
-  Autoplay,
-  Navigation,
-} from "swiper/modules";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import "./style.css";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
-import ImageComponent from "../../component/image/ImageComponent";
-import { useSelector } from "react-redux";
-export const Categories = () => {
-  const isSm = useMediaQuery("(max-width:760px)"); // Mobile
-  const isMd = useMediaQuery("(max-width:1060px)"); // Tablet
-  const { category } = useSelector((state) => state.leaf);
+import React from 'react';
+import CountUp from 'react-countup';
+import { useInView } from 'react-intersection-observer';
+import './style.css'; // make sure this loads your updated CSS
+
+const stats = [
+  { end: 19, label: 'CIB&RC Registered Products' },
+  { end: 14, label: 'Biofertilizers under FCO, 1985' },
+  { end: 15, label: 'Biostimulants under FCO, 1985' },
+  { end: 13, label: 'Plant Nutrients under FCO, 1985' },
+  { end: 23, label: 'Ecocert Certified Organic Products' },
+
+];
+
+export const Categories = () => (
+  <section className="py-16 px-4">
+    <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+    Reviving soils one application at a time    </h2>
+    <p className="text-center text-gray-600 mb-12">
+    Reviving soils one application at a time    </p>
+
+    <div  className="stats-grid gap-8 max-w-6xl mx-auto px-4">
+      {stats.map(({ end, label }, i) => (
+        <StatCircle key={i} end={end} label={label} />
+      ))}
+    </div>
+  </section>
+);
+
+function StatCircle({ end, label }) {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
-    <div className="md:px-[10%] sm:px-[5%] px-2">
-      <div className="rounded-3xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-2xl px-2 py-8 md:mt-8 sm:mt-4 transition-all duration-500">
-        <div className="text-center">
-          <h2 className="md:text-4xl  text-xl  font-semibold">Categories</h2>
-          <p className="md:text-[16px] text-gray-600 mt-1">
-            Find what you are looking for
-          </p>
-        </div>
-
-        <div className="mt-12">
-          <Swiper
-            grabCursor={true}
-            centeredSlides={true}
-            navigation={true}
-            slidesPerView={isSm ? 1 : isMd ? 2 : 4}
-            pagination={{
-              dynamicBullets: true,
-              clickable: true,
-            }}
-            modules={[Pagination, Autoplay, Navigation]}
-            autoplay={{
-              delay: 5000,
-              disableOnInteraction: false,
-            }}
-            className="gap-6"
-          >
-            {Array.isArray(category) &&
-              category?.map((item, index) => (
-                <SwiperSlide key={index} className="">
-                  <div className="flex flex-col items-center">
-                    <div className="w-[160px] h-[160px] md:w-[140px] md:h-[140px] sm:w-[120px] sm:h-[120px] rounded-2xl bg-white/20 backdrop-blur-xl border border-white/20 shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-105 hover:bg-white/30 hover:shadow-2xl">
-                      <ImageComponent
-                        src={item?.image?.formats?.large?.url ? `${import.meta.env.VITE_Image_BASE_URL}${item.image.formats?.large?.url}` : "http://13.204.64.227:1337/uploads/thumbnail_6_3941d44fee.png"}
-                        alt="imt"
-                        cardCss="w-[85%] h-[85%] object-contain rounded-xl shadow-md bg-white/10 backdrop-blur-md border border-white/10 border-opacity-20"
-                      />
-                    </div>
-                    <div className="text-center mt-4">
-                      <h3 className="text-[16px] font-semibold text-black/80 drop-shadow-sm">
-                        {item?.Name}
-                      </h3>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-          </Swiper>
-        </div>
+    <div ref={ref} className="stat-circle group flex items-center justify-center">
+      <svg className="w-50 h-50" viewBox="0 0 100 100">
+        <circle className="ring-bg" cx="50" cy="50" r="45" />
+        <circle className="ring-fg" cx="50" cy="50" r="45" />
+      </svg>
+      <div className="inner-text">
+        {inView && (
+          <CountUp
+            end={end}
+            duration={10}
+            separator=","
+            suffix="+"
+            className="count"
+          />
+        )}
+        <div className="label">{label}</div>
       </div>
     </div>
   );
-};
+}

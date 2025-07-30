@@ -32,39 +32,33 @@ export const ShopCard = ({ id, item }) => {
   return (
     <div
       onClick={() => showProductDetails(item?.documentId)}
-      className="p-3 cursor-pointer shadow-2xl relative rounded-xl"
+      className="bg-white border border-gray-200 p-6 rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer"
     >
-      <ImageComponent
-        src={`${import.meta.env.VITE_Image_BASE_URL}${
-          item?.image[0]?.url
-        }`}
-        cardCss="w-full h-[36vh]"
-        imgCss="object-cover w-full h-full rounded-lg p-4"
-      />
-
-      <div className="absolute top-4 right-4">
-        <FavoriteIcon
+       {/* <FavoriteIcon
           className="cursor-pointer"
           onClick={(e) => handleAddFavorite(e, id)}
           style={{
-            width: "30px",
-            height: "30px",
-            fill: isFavorite.includes(id) ? "green" : "gray",
+            width: "28px",
+            height: "28px",
+            fill: isFavorite.includes(id) ? "#1e3a8a" : "#ccc",
+            right:0
           }}
+        /> */}
+      <div className="w-full h-64 flex justify-center items-center overflow-hidden">
+        <ImageComponent
+          src={`${import.meta.env.VITE_Image_BASE_URL}${item?.image[0]?.url}`}
+          cardCss="w-full h-full"
+          imgCss="object-contain w-full h-full"
         />
       </div>
 
-      <div className="px-2 pt-2">
-        <h3 className="text-center text-md">{item?.title || "Product Name"}</h3>
-        <p className="text-center text-gray-600">
+      <div className="mt-4 flex flex-col items-center">
+        <h3 className="text-lg font-medium text-gray-800 text-center">
+          {item?.title || "Product Name"}
+        </h3>
+        <p className="text-sm text-gray-500 mt-1">
           ₹{item?.OrigialPrice || "0.00"}
         </p>
-        <button
-          onClick={handleAddToCart}
-          className="bg-blue-800 w-full text-white mt-2 py-2 rounded-md flex justify-center items-center gap-2"
-        >
-          Add To Cart <ShoppingCartCheckoutIcon />
-        </button>
       </div>
     </div>
   );

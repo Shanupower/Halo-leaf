@@ -9,6 +9,108 @@
 }
 .swiper-pagination-horizontal {
   bottom: 0rem !important;
+
+}
+.stats-grid {
+  display: grid;
+  /* each cell is at least 300px, but will expand to fill remaining space */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0rem; 
+}
+
+/* Let the SVG fill its parent cell completely */
+.stat-circle svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: none;  /* remove any previous cap */
+}
+
+/* ──────────────────────────────────────────────────────
+   Container & Layout
+─────────────────────────────────────────────────────── */
+.stat-circle {
+  position: relative;
+  display: inline-block;       /* shrink-wrap to the svg */
+  margin: 1rem auto;           /* ensure spacing in your grid */
+}
+
+/* ──────────────────────────────────────────────────────
+   SVG Sizing
+─────────────────────────────────────────────────────── */
+/* Let the grid cell control the size; cap at 300px */
+.stat-circle svg {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+  display: block;              /* eliminate inline-block whitespace */
+}
+@media (min-width: 768px) {
+  .stat-circle svg {
+    max-width: 300px;
+  }
+}
+/* ──────────────────────────────────────────────────────
+   Background Ring (Gray)
+─────────────────────────────────────────────────────── */
+.stat-circle .ring-bg {
+  fill: none;
+  stroke: #e5e7eb;             /* gray-200 */
+  stroke-width: 0.5;
+}
+
+/* ──────────────────────────────────────────────────────
+   Foreground Ring (Orange)
+─────────────────────────────────────────────────────── */
+/* thickness and initial half-fill */
+.stat-circle .ring-fg {
+  fill: none;
+  stroke: #f97316;             /* orange-500 */
+  stroke-width: 1;             /* thinner */
+  stroke-dasharray: 283;       /* 2πr where r=45 */
+  stroke-dashoffset: 141.5;    /* half the circumference */
+  transition: stroke-dashoffset 1s ease;
+}
+
+/* draw full circle on hover */
+.stat-circle.group:hover .ring-fg {
+  stroke-dashoffset: 0;
+}
+
+/* alternate start positions */
+.stat-circle:nth-of-type(odd) .ring-fg {
+  transform: rotate(180deg);
+  transform-origin: 50% 50%;
+}
+.stat-circle:nth-of-type(even) .ring-fg {
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+}
+
+/* ──────────────────────────────────────────────────────
+   Star Pseudo‐Element
+─────────────────────────────────────────────────────── */
+
+
+/* ──────────────────────────────────────────────────────
+   Inner Text (Count + Label)
+─────────────────────────────────────────────────────── */
+.stat-circle .inner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.stat-circle .inner-text .count {
+  font-size: 4rem;
+}
+
+.stat-circle .inner-text .label {
+  font-size: 0.8rem;
+  color: #374151;              /* gray-700 */
 }
 
 .category-card {
