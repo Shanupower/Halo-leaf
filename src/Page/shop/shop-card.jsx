@@ -5,6 +5,8 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../feature/leafSlice";
+import { motion } from "framer-motion";
+
 
 export const ShopCard = ({ id, item }) => {
   const [isFavorite, setIsFavorite] = useState([]);
@@ -45,11 +47,18 @@ export const ShopCard = ({ id, item }) => {
           }}
         /> */}
       <div className="w-full h-64 flex justify-center items-center overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: true }}
+        >
         <ImageComponent
           src={`${import.meta.env.VITE_Image_BASE_URL}${item?.image[0]?.url}`}
           cardCss="w-full h-full"
           imgCss="object-contain w-full h-full"
         />
+        </motion.div>
       </div>
 
       <div className="mt-4 flex flex-col items-center">
