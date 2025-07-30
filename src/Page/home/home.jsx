@@ -4,6 +4,7 @@ import { BestSell } from "./bestSell";
 import { Categories } from "./categories";
 import { Hero } from "./hero";
 import { Testimonials } from "./testimonials";
+import ContactForm from "./contact";
 
 export const Home = () => {
   const leaf = useSelector((state) => state.leaf);
@@ -14,7 +15,7 @@ export const Home = () => {
       <BestSell />
       <About />
       <Categories />
-      <Testimonials />
+      <ContactForm />
     </div>
   );
 };
