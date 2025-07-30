@@ -17,7 +17,7 @@ export const BestSell = () => {
   const { product } = useSelector((state) => state.leaf);
 
   return (
-    <div className="md:px-[10%] md:h-[60vh] sm:px-[5%] px-2 py-4 md:mt-8 sm:mt-4 flex md:flex-row flex-col gap-6   justify-between">
+    <div id="best-sell-section" className="md:px-[10%] md:h-[60vh] sm:px-[5%] px-2 py-4 md:mt-8 sm:mt-4 flex md:flex-row flex-col gap-6   justify-between">
       {/* Left Side Details with Animation */}
       <motion.div
         initial={{ opacity: 1, x: 0 }}

@@ -13,6 +13,10 @@ import { setActiveTab } from "../../../feature/leafSlice";
 import { fetchUserData } from "../../../helper/helper";
 import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import { useCallback } from "react";
+
 export const Header = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -35,14 +39,48 @@ export const Header = () => {
     localStorage.removeItem("leafUser");
   };
 
+  // Particle options for a flowing, glassy effect
+  const particlesInit = useCallback(async (engine) => {
+    await loadFull(engine);
+  }, []);
+  const particlesOptions = {
+    fullScreen: false,
+    background: { color: "transparent" },
+    particles: {
+      number: { value: 30, density: { enable: true, value_area: 800 } },
+      color: { value: ["#ffffff", "#aee9f7", "#b5ffd9"] },
+      opacity: { value: 0.3, random: true },
+      size: { value: 4, random: { enable: true, minimumValue: 1 } },
+      move: { enable: true, speed: 1.2, direction: "none", outModes: { default: "out" } },
+      shape: { type: "circle" },
+    },
+    interactivity: {
+      events: {
+        onHover: { enable: true, mode: "repulse" },
+        resize: true,
+      },
+      modes: {
+        repulse: { distance: 60, duration: 0.4 },
+      },
+    },
+    detectRetina: true,
+  };
+
   return (
-    <div className="md:px-[8%] sm:px-[5%] px-2  flex justify-between gap-4  items-center sticky top-0 bg-white w-full z-50 shadow-sm">
+    <div className="relative md:px-[8%] sm:px-[5%] px-2 flex justify-between gap-4 items-center sticky top-0 w-full z-50 shadow-2xl bg-white/30 backdrop-blur-xl border-b border-white/40 before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/60 before:to-white/10 before:rounded-b-xl before:pointer-events-none before:z-[-1] transition-all duration-500 hover:bg-white/50 hover:backdrop-blur-2xl group overflow-hidden">
+      {/* Flowing Particles Background */}
+      <Particles
+        id="tsparticles-header"
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+        init={particlesInit}
+        options={particlesOptions}
+      />
       <Link to="/">
         <ImageComponent
           variant="circular"
           src={Logo}
           alt="logo"
-          cardCss="sm:size-[90px] md:size-[90px] size-[60px]"
+          cardCss="sm:size-[90px] md:size-[90px] size-[60px] group-hover:scale-105 transition-transform duration-500"
         />
       </Link>
 
