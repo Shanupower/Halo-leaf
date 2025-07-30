@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactFlipCard from 'reactjs-flip-card';
 import 'reactjs-flip-card/dist/ReactFlipCard.css';
-import ProductImage from '../../assets/Homepage/1.png';
+import ProductImage from '../../assets/Homepage/3.png';
+import { motion } from "framer-motion";
 
 const cards = [
   { description: 'This is the description for Card 1.', image: ProductImage },
@@ -34,25 +35,46 @@ export const BestSell = () => (
             // Use the correct flip trigger
             flipTrigger="onHover"
             direction="horizontal"
-            frontStyle={{ borderRadius: '1rem', overflow: 'hidden' }}
+            frontStyle={{ borderRadius: '1rem', overflow: 'hidden', backgroundColor: "#1b7b31" }}
             backStyle={{
               borderRadius: '1rem',
               backgroundColor: '#ffffff',
               overflow: 'hidden',
               display: 'flex',
+              flexWrap: "wrap",
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '1rem',
+              padding: '1.2rem',
               textAlign: 'center',
+              border: "2px solid green",
             }}
             frontComponent={
+              <>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                viewport={{ once: true }}
+              >
               <img
                 src={card.image}
                 alt={`Product ${idx + 1}`}
                 className="w-full h-full object-cover"
               />
+              </motion.div>
+              </>
             }
-            backComponent={<span className="font-bold text-lg">{card.description}</span>}
+            backComponent={
+            <>
+            <span className="font-bold text-lg">{card.description}</span>
+            <div>
+            <button
+            className="mt-5 bg-green-600 hover:bg-green-700 text-white px-10 py-3 rounded-full mx-auto block transition duration-300"
+          >
+          Show More Products
+          </button>
+          </div>
+          </>}
           />
         </div>
       ))}
