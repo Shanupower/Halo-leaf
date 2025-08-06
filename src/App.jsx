@@ -127,6 +127,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="product/:categoryId"
+                  element={
+                    <AnimatePage>
+                      <Shop />
+                    </AnimatePage>
+                  }
+                />
+                <Route
                   path="cart"
                   element={
                     <AnimatePage>

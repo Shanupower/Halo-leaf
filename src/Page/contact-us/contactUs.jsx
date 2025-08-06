@@ -28,14 +28,17 @@ export const ContactUs = () => {
   const offices = [
     {
       name: "Head Office",
-      phone: "+91-8919123748",
-      address: "5, 5-400/733, Prashanth Nagar, Vanasthalipuram, Hyderabad, Telangana 500070",
+      phone: "+91-40-24074427",
+      email: "customercare@varshabioscience.com",
+      address: "Hyderabad",
+      // address: "5, 5-400/733, Prashanth Nagar, Vanasthalipuram, Hyderabad, Telangana 500070",
       mapSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.5785097939047!2d78.56447399999999!3d17.335874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcba3075e06d0bb%3A0xfd5a4edefede821!2sDasari%E2%80%99s%20Nilayam!5e0!3m2!1sen!2sin!4v1751183513381!5m2!1sen!2sin", // replace with actual
     },
     {
-      name: "Branch Office",
-      phone: "+91-8919123748",
-      address: "H. no: 5, Ashirvad Nilayam, 2-175/ 24&25, Road No.4, Gandhi Nagar South Colony, Vanasthalipuram, Hyderabad, Telangana 500070",
+      name: "Manufacturing Unit",
+      phone: "+91-44-26557788",
+      email: "info@varshabioscience.com",
+      address: "Chennai",
       mapSrc: "https://www.google.com/maps?q=H.+no:+5,+Halo+Leaf+Plates,+Ashirvad+Nilayam,+2-175%2F24%2625,+Road+No.4,+Gandhi+Nagar+South+Colony,+Vanasthalipuram,+Hyderabad,+Telangana+500070&output=embed",
     },
     // {
@@ -110,6 +113,7 @@ export const ContactUs = () => {
           <div key={idx} className="border rounded-lg overflow-hidden p-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-2">{office.name}</h3>
             <p><strong>Phone:</strong> {office.phone}</p>
+            <p><strong>Email:</strong> {office.email}</p>
             <p className="mb-2"><strong>Address:</strong> {office.address}</p>
             <div className="w-full h-48">
               <iframe

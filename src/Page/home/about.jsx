@@ -28,7 +28,7 @@ export const About = () => {
           </h2>
         </div>
         
-        <p className="text-sm md:text-base text-gray-700 max-w-xl md:max-w-2xl mx-auto leading-relaxed px-4" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '300', fontStyle: 'italic'}}>
+        <p className="text-sm md:text-base text-gray-700 max-w-xl md:max-w-2xl mx-auto leading-relaxed px-4" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '700', fontStyle: 'italic'}}>
           To transform agriculture into a regenerative, bio-driven ecosystem—where every farm thrives, soils heal, and communities flourish.
         </p>
       </div>
@@ -39,7 +39,7 @@ export const About = () => {
         <div className="relative mb-6 md:mb-12 flex justify-center">
           <div className="absolute top-1/2 left-0 right-0 h-px bg-gray-300 transform -translate-y-1/2 z-0"></div>
           <h2 className="relative bg-white px-4 md:px-8 text-4xl md:text-7xl lg:text-8xl text-gray-300 tracking-[0.2em] md:tracking-[0.3em] z-10" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '100'}}>
-            Our missions
+            Our mission
           </h2>
         </div>
 
@@ -47,64 +47,64 @@ export const About = () => {
           We are dedicated to pioneering sustainable bio-technologies and empowering farmers with science-backed solutions. Through relentless innovation, hands-on collaboration, and global partnerships, we aim to drive yield improvements, restore soil health, and build a greener future for all.
         </p>
 
-        {/* Interactive Circles */}
-        <div className="flex flex-row items-center justify-center gap-4 md:gap-8 flex-wrap md:flex-nowrap">
-          {/* Left Circle */}
-          <div 
-            className="relative group cursor-pointer flex-shrink-0"
-            onMouseEnter={() => setHoveredCircle('left')}
-            onMouseLeave={() => setHoveredCircle(null)}
-          >
-            <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'left' ? 'text-white border-[#5ab334] transform scale-110' : 'bg-white text-gray-700'}`} style={hoveredCircle === 'left' ? {backgroundColor: '#5ab33480'} : {}}>
-              {hoveredCircle === 'left' ? (
-                <div className="text-sm leading-tight" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '400'}}>
-                  <div>Develop cutting-edge microbial formulations that replace harmful chemicals and boost crop productivity</div>
-                </div>
-              ) : (
-                <div className="text-lg leading-tight" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '600'}}>
-                  Innovate with Impact
-                </div>
-              )}
-            </div>
-          </div>
+        <div className="flex items-center justify-center flex-wrap md:flex-nowrap relative mt-10">
+  {/* Left Circle */}
+  <div 
+    className="z-30 relative group cursor-pointer flex-shrink-0"
+    onMouseEnter={() => setHoveredCircle('left')}
+    onMouseLeave={() => setHoveredCircle(null)}
+  >
+    <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'left' ? 'text-white border-[#5ab334] transform scale-110' : ' text-gray-700'}`} style={hoveredCircle === 'left' ? {backgroundColor: '#5ab33480'} : {}}>
+      {hoveredCircle === 'left' ? (
+        <div className="text-sm leading-tight font-normal font-inter">
+          Develop cutting-edge microbial formulations that replace harmful chemicals and boost crop productivity
+        </div>
+      ) : (
+        <div className="text-lg leading-tight font-semibold font-inter">
+          Innovate with Impact
+        </div>
+      )}
+    </div>
+  </div>
 
-          {/* Center Circle */}
-          <div 
-            className="relative group cursor-pointer flex-shrink-0"
-            onMouseEnter={() => setHoveredCircle('center')}
-            onMouseLeave={() => setHoveredCircle(null)}
-          >
-            <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'center' ? 'text-white border-[#5ab334] transform scale-110' : 'bg-white text-gray-700'}`} style={hoveredCircle === 'center' ? {backgroundColor: '#5ab33480'} : {}}>
-              {hoveredCircle === 'center' ? (
-                <div className="text-sm leading-tight" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '400'}}>
-                  <div>Provide agronomic guidance and tailored bio-solutions that deliver measurable on-field results</div>
-                </div>
-              ) : (
-                <div className="text-lg leading-tight" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '600'}}>
-                  Empower Farmers
-                </div>
-              )}
-            </div>
-          </div>
+  {/* Center Circle - overlapping left */}
+  <div 
+    className="-ml-5 z-1 relative group cursor-pointer flex-shrink-0"
+    onMouseEnter={() => setHoveredCircle('center')}
+    onMouseLeave={() => setHoveredCircle(null)}
+  >
+    <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'center' ? 'text-white border-[#5ab334] transform scale-110' : ' text-gray-700'}`} style={hoveredCircle === 'center' ? {backgroundColor: '#5ab33480'} : {}}>
+      {hoveredCircle === 'center' ? (
+        <div className="text-sm leading-tight font-normal font-inter">
+          Provide agronomic guidance and tailored bio-solutions that deliver measurable on-field results
+        </div>
+      ) : (
+        <div className="text-lg leading-tight font-semibold font-inter">
+          Empower Farmers
+        </div>
+      )}
+    </div>
+  </div>
 
-          {/* Right Circle - Default Blue */}
-          <div 
-            className="relative group cursor-pointer flex-shrink-0"
-            onMouseEnter={() => setHoveredCircle('right')}
-            onMouseLeave={() => setHoveredCircle(null)}
-          >
-            <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'right' ? 'text-white border-[#5ab334] transform scale-110' : 'bg-white text-gray-700 border-gray-300'}`} style={hoveredCircle === 'right' ? {backgroundColor: '#5ab33480'} : {}}>
-              {hoveredCircle === 'right' ? (
-                <div className="text-sm leading-tight" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '400'}}>
-                  <div>Forge strategic partnerships with research institutes and agri-tech leaders to push the boundaries of sustainable agriculture</div>
-                </div>
-              ) : (
-                <div className="text-lg leading-tight" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '600'}}>
-                  Collaborate Globally
-                </div>
-              )}
-            </div>
-          </div>
+  {/* Right Circle - overlapping center */}
+  <div 
+    className="-ml-5 z-1 relative group cursor-pointer flex-shrink-0"
+    onMouseEnter={() => setHoveredCircle('right')}
+    onMouseLeave={() => setHoveredCircle(null)}
+  >
+    <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'right' ? 'text-white border-[#5ab334] transform scale-110' : ' text-gray-700'}`} style={hoveredCircle === 'right' ? {backgroundColor: '#5ab33480'} : {}}>
+      {hoveredCircle === 'right' ? (
+        <div className="text-sm leading-tight font-normal font-inter">
+          Forge strategic partnerships with research institutes and agri-tech leaders to push the boundaries of sustainable agriculture
+        </div>
+      ) : (
+        <div className="text-lg leading-tight font-semibold font-inter">
+          Collaborate Globally
+        </div>
+      )}
+    </div>
+  </div>
+
         </div>
       </div>
     </div>
