@@ -32,7 +32,7 @@ export const ProductDetails = () => {
   // Accordion toggles
   const [showDescription, setShowDescription] = useState(false);
   const [showShipping, setShowShipping] = useState(false);
-const [expanded, setExpanded] = useState(true);
+// const [expanded, setExpanded] = useState(true);
   useEffect(() => {
     window.scrollTo(0, 0);
     setMainImage(productDetails?.image?.[0]?.url);
@@ -134,7 +134,7 @@ const [expanded, setExpanded] = useState(true);
             )}
           </div>
 
-          <Accordion expanded={true} className="rounded-md border border-none shadow-sm">
+          <Accordion className="rounded-md border border-none shadow-sm">
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
