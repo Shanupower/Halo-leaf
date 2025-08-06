@@ -1,6 +1,5 @@
 export const HeaderData = [
   { id: 1, title: "Home", link: "/" },
-  // { id: 2, title: "About Us", link: "/about-us" },
   { id: 3, title: "Why Us", link: "/why-us" },
   { id: 4, title: "Our Products", link: "/product" },
   { id: 9, title: "Contact Us", link: "/contact-us" },
