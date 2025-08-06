@@ -1,12 +1,8 @@
 export const HeaderData = [
   { id: 1, title: "Home", link: "/" },
-   { id: 2, title: "About Us", link: "/about-us" },
+  // { id: 2, title: "About Us", link: "/about-us" },
   { id: 3, title: "Why Us", link: "/why-us" },
   { id: 4, title: "Our Products", link: "/product" },
-  { id: 5, title: "R&D", link: "/r-&-d" },
-  { id: 6, title: "Credentials", link: "/credentials" },
-  { id: 7, title: "news", link: "/news" },
-  { id: 8, title: "Careers", link: "/careers" },
   { id: 9, title: "Contact Us", link: "/contact-us" },
 ];
 import Img1 from "../assets/product 1/1.png";
