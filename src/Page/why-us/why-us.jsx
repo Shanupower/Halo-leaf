@@ -1,145 +1,186 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Player } from "@lottiefiles/react-lottie-player";
-import animationData from "../../assets/Lotie/Leaf.json";
-import {
-  FaSeedling,
-  FaGlobe,
-  FaHandsHelping,
-  FaMedkit,
-  FaBiohazard,
-} from "react-icons/fa";
-import { useInView } from "react-intersection-observer";
-import { motion } from "framer-motion";
+// src/pages/WhyUs.jsx
+import React, { useEffect, useRef, useState } from 'react';
+import './AboutUs.css';
+
+// Import your images
+import img2003 from '../../assets/Aboutus/2003-2008.jpg';
+import img2009 from '../../assets/Aboutus/2009-2012.jpg';
+import img2013 from '../../assets/Aboutus/2013-2016.jpg';
+import img2017 from '../../assets/Aboutus/2017-2021.jpg';
+import imgToday from '../../assets/Aboutus/today.jpg';
+
+const timelineData = [
+  {
+    period: '2003–2008',
+    title: 'Laying the Scientific Foundations',
+    image: img2003,
+    entries: [
+      `2003: Small team of microbiologists and agronomists unite to develop eco-friendly bio-inputs.`,
+      `2006: First major research partnership with Tamil Nadu Agricultural University on nitrogen-fixing strains.`,
+      `2007: Collaboration with ICFAI Centre for Biosciences on microbial formulation.`,
+      `2008: MOU with Indian Institute of Oilseeds Research and accreditation from Dun & Bradstreet.`,
+    ],
+  },
+  {
+    period: '2009–2012',
+    title: 'Building Quality and Research Networks',
+    image: img2009,
+    entries: [
+      `2009: ISO 9001:2008 certification; recognition by Indian Institute of Horticultural Research (IIHR).`,
+      `2010: MOU with IIHR to trial horticultural bio-inputs.`,
+      `2011: Joint studies with Loyola Academy on formulation stability.`,
+      `2012: Collaborative research with KL University on crop-specific microbial blends.`,
+    ],
+  },
+  {
+    period: '2013–2016',
+    title: 'Establishing In-House Excellence',
+    image: img2013,
+    entries: [
+      `2013: DSIR recognition of our Hyderabad labs as an In-House R&D Centre.`,
+      `2014: Partnership with Agri-Biotech Foundation at VIT for next-gen seed coating technologies.`,
+      `2015: Collaboration with Tea Research Association on microbe-mediated stress tolerance.`,
+      `2016: Work with Institute of Forest Genetics & Tree Breeding on bio-solutions for tree crops.`,
+    ],
+  },
+  {
+    period: '2017–2021',
+    title: 'Certification, Awards & Global Reach',
+    image: img2017,
+    entries: [
+      `2017: Ecocert Organic Certification and MOU with Assam Agricultural University.`,
+      `2018: Collaboration with Prof. Jayashankar Telangana State Agricultural University.`,
+      `2019: Launched India's first indigenous Bt biopesticide; Best R&D Product Development award.`,
+      `2020: National Award for Excellence in R&D.`,
+      `2021: Field trials with ICRISAT, taking our research global.`,
+    ],
+  },
+  {
+    period: 'Today',
+    title: 'Leading the Bio-Ag Revolution',
+    image: imgToday,
+    entries: [
+      `Serving thousands of farmers across India and partnering with global institutes.`,
+      `Portfolio of nine product categories, powered by ongoing R&D, state-of-the-art manufacturing, and sustainability.`,
+    ],
+  },
+];
 
 export const WhyUs = () => {
-  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
-  const lottieRef = useRef(null);
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
-  const [visibleCards, setVisibleCards] = useState(0);
-
-  const cardsData = [
-    {
-      icon: <FaMedkit className="text-green-500 text-5xl" />,
-      title: "Chemical-Free",
-      desc: "Non-toxic for a healthier meal.",
-      className: "lg:absolute top-5 left-64 ",
-    },
-    {
-      icon: <FaHandsHelping className="text-green-500 text-5xl" />,
-      title: "Community Support",
-      desc: "Empowering tribal artisans and rural communities.",
-      className: "lg:absolute top-60 left-20 z-0",
-    },
-    {
-      icon: <FaSeedling className="text-green-500 text-5xl" />,
-      title: "Natural & Biodegradable",
-      desc: "100% natural and fully biodegradable.",
-      className: "lg:absolute bottom-30 left-40",
-    },
-    {
-      icon: <FaGlobe className="text-green-500 text-5xl" />,
-      title: "Eco-Friendly",
-      desc: "Renewable and sustainable for a greener future.",
-      className: "lg:absolute top-5 right-26",
-    },
-    {
-      icon: <FaHandsHelping className="text-green-500 text-5xl" />,
-      title: "Rural Livelihoods",
-      desc: "Supporting communities and tribal artisans.",
-      className: "lg:absolute top-60 right-26",
-    },
-    {
-      icon: <FaBiohazard className="text-green-500 text-5xl" />,
-      title: "Antibacterial",
-      desc: "Naturally prevents bacteria growth.",
-      className: "lg:absolute bottom-30 right-50",
-    },
-  ];
+  const [visibleItems, setVisibleItems] = useState(new Set());
+  const timelineRefs = useRef([]);
 
   useEffect(() => {
-    if (inView) {
-      // Start card animation after 2s
-      const timer = setTimeout(() => {
-        cardsData.forEach((_, index) => {
-          setTimeout(() => {
-            setVisibleCards((prev) => prev + 1);
-          }, index * 300); // 300ms delay between cards
-        });
-      }, 2000);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [inView]);
-
-  // Lock the scroll while animation is playing
-  useEffect(() => {
-    if (!isAnimationComplete) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    const observers = [];
+    
+    timelineRefs.current.forEach((ref, index) => {
+      if (ref) {
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              setVisibleItems(prev => new Set([...prev, index]));
+            }
+          },
+          {
+            threshold: 0.3,
+            rootMargin: '-20% 0px -20% 0px'
+          }
+        );
+        
+        observer.observe(ref);
+        observers.push(observer);
+      }
+    });
 
     return () => {
-      document.body.style.overflow = "auto"; // Clean up on unmount
+      observers.forEach(observer => observer.disconnect());
     };
-  }, [isAnimationComplete]);
+  }, []);
 
   return (
-    <div className="w-full overflow-hidden z-10" ref={ref}>
-      <div className="relative discover-left-card mb-[0vh]  ">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          className="lg:h-[100vh] h-[40vh]"
-        >
-          <Player
-            ref={lottieRef}
-            autoplay
-            keepLastFrame
-            src={animationData}
-            className="w-full lg:h-[80vh] h-[40vh]"
-            onEvent={(event) => {
-              if (event === "complete") {
-                setIsAnimationComplete(true);
-              }
-            }}
-          />
+    <div className="page-wrapper">
+      <div className="section-timeline-heading">
+        <div className="container">
+          <div className="padding-vertical-xlarge">
+            <div className="timeline-main_heading-wrapper">
+              <div className="margin-bottom-medium">
+                <h2>Our Journey</h2>
+              </div>
+              <p className="paragraph-large">
+                Over two decades of pioneering bio-agriculture innovation. <br />
+                Discover our journey from research to revolutionizing sustainable farming.
+              </p>
+            </div>
+          </div>
         </div>
-        {cardsData.slice(0, visibleCards).map((card, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            whileHover={{ scale: 1.05 }}
-            className={`${card.className} flex flex-col items-center justify-center p-4 rounded-lg shadow-lg bg-white  `}
-          >
-            {card.icon}
-            <h4 className="mt-4 text-sm font-semibold">{card.title}</h4>
-            <p className="mt-2 text-gray-600 text-sm">{card.desc}</p>
-          </motion.div>
-        ))}
       </div>
 
-      <h2 className="text-3xl font-bold text-center my-12">ABOUT US</h2>
+      <div className="section-timeline">
+        <div className="container">
+          <div className="timeline_component">
+            <div className="timeline_progress">
+              <div className="timeline_progress-bar"></div>
+            </div>
 
-      <div className="flex justify-center my-6">
-        <p className="text-lg leading-relaxed max-w-3xl text-center">
-          Halo Leaf is dedicated to providing eco-friendly, sustainable, and
-          biodegradable dining solutions through our high-quality Siali leaf
-          plates...
-        </p>
+            {timelineData.map((item, index) => (
+              <div 
+                key={index} 
+                className="timeline_item"
+                ref={el => timelineRefs.current[index] = el}
+              >
+                <div className="timeline_left">
+                  <div className="timeline_date-text">{item.period}</div>
+                </div>
+                <div className="timeline_centre">
+                  <div className="timeline_circle"></div>
+                </div>
+                <div className={`timeline_right ${visibleItems.has(index) ? 'animate-in' : ''}`}>
+                  <div className="margin-bottom-medium">
+                    <div className="timeline_text">
+                      <strong>{item.title}</strong>
+                    </div>
+                  </div>
+                  
+                  <div className="timeline_entries margin-bottom-medium">
+                    {item.entries.map((entry, entryIndex) => (
+                      <p key={entryIndex} className="timeline_entry">
+                        {entry}
+                      </p>
+                    ))}
+                  </div>
+
+                  {item.image && (
+                    <div className="timeline_image-wrapper margin-bottom-medium">
+                      <img 
+                        src={item.image} 
+                        loading="lazy" 
+                        width="480" 
+                        alt={item.title}
+                      />
+                    </div>
+                  )}
+
+                  {index === timelineData.length - 1 && (
+                    <div className="margin-bottom-xlarge">
+                      <div className="inline-block">
+                        <a href="#contact" className="timeline_link inline-block">
+                          Partner With Us Today
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            <div className="overlay-fade-top"></div>
+            <div className="overlay-fade-bottom"></div>
+          </div>
+        </div>
+        <div style={{height: '50vh'}}></div>
       </div>
-
-      <p className="text-lg leading-relaxed mt-8 text-center max-w-3xl m-auto py-10">
-        Our mission at Halo Leaf is to reduce plastic waste and promote
-        sustainable dining by offering 100% natural Siali leaf plates.
-      </p>
     </div>
   );
 };
+
+export default WhyUs;

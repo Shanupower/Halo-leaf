@@ -12,9 +12,10 @@ export const Home = () => {
   return (
     <div className="">
       <Hero />
+      <Categories />
       <BestSell />
       <About />
-      <Categories />
+ 
       <ContactForm />
     </div>
   );

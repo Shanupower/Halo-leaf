@@ -1,8 +1,7 @@
 export const HeaderData = [
   { id: 1, title: "Home", link: "/" },
   { id: 2, title: "Why Us", link: "/why-us" },
-  { id: 3, title: "Our Community", link: "/testimonials" },
-  { id: 4, title: "Our Product", link: "/product" },
+  { id: 4, title: "Our Products", link: "/product" },
   { id: 5, title: "Contact Us", link: "/contact-us" },
 ];
 import Img1 from "../assets/product 1/1.png";

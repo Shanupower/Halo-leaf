@@ -35,8 +35,7 @@ export const Hero = () => {
       {/* Hero content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center text-white pt-28">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-shadow">
-          Sustainable Tableware for a Greener Tomorrow
-        </h1>
+        Bio-Tech Meets the Farm of Tomorrow        </h1>
 
         <div className="text-xl md:text-3xl font-medium text-green-200 mb-6">
           <ReactTyped
