@@ -1,30 +1,46 @@
 import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import { Pagination, FreeMode, Navigation } from "swiper/modules";
-import StarsIcon from "@mui/icons-material/Stars";
-import ImageComponent from "../../component/image/ImageComponent";
-import { useMediaQuery } from "@mui/material";
-import { ShopCard } from "./shop-card";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../feature/leafSlice";
+import ProductImageSlider from "./ProductImageSlider";
+import { ShopCard } from "./shop-card";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import EventIcon from "@mui/icons-material/Event";
+
+
 export const ProductDetails = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const { product } = useSelector((state) => state.leaf);
-
   const productDetails = product?.find((item) => item?.documentId === id);
 
+  const [mainImage, setMainImage] = useState("");
   const [deliveryPincode, setDeliveryPincode] = useState("");
   const [serviceResponse, setServiceResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
+
+  // Accordion toggles
+  const [showDescription, setShowDescription] = useState(false);
+  const [showShipping, setShowShipping] = useState(false);
+// const [expanded, setExpanded] = useState(true);
   useEffect(() => {
-    window.scrollTo(-0, -0);
-  }, [id]);
+    window.scrollTo(0, 0);
+    setMainImage(productDetails?.image?.[0]?.url);
+  }, [productDetails]);
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({ ...productDetails, quantity: 1 }));
+  };
 
   const checkServiceability = async () => {
     if (!deliveryPincode) return;
@@ -53,218 +69,190 @@ export const ProductDetails = () => {
         }
       );
 
-      setServiceResponse(response.data);
+      const data = await response.json();
+      setServiceResponse(data);
     } catch (err) {
       console.error(err);
-      setError(
-        "Service check failed. Please check your pincode and try again."
-      );
-      if (err.response) {
-        // The request was made and the server responded with a status code
-        console.error("Response data:", err.response.data);
-        console.error("Response status:", err.response.status);
-        console.error("Response headers:", err.response.headers);
-      } else if (err.request) {
-        // The request was made but no response was received
-        console.error("No response received:", err.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error("Error:", err.message);
-      }
+      setError("Service check failed. Please check your pincode and try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddToCart = (e) => {
-    e.stopPropagation();
-    dispatch(addToCart({ ...productDetails, quantity: 1 }));
-  };
-
   return (
-    <div className="md:px-[10%] sm:px-[5%] px-2 py-4 mt-2 ">
-      <h2 className="md:text-2xl text-xl font-semibold">Product</h2>
+    <div className="max-w-7xl mx-auto px-4 py-30">
+      {/* Top Section */}
+      <div className="grid md:grid-cols-2 gap-10">
+        {/* Images */}
+        <ProductImageSlider
+          images={
+            productDetails?.image?.map(
+              (img) => `${import.meta.env.VITE_Image_BASE_URL}${img.url}`
+            ) || []
+          }
+        />
 
-      <div className="flex mt-6 gap-6 md:flex-row flex-col">
-        <Swiper
-          pagination={{
-            type: "fraction",
-          }}
-          navigation={true}
-          modules={[Pagination, Navigation]}
-          className="md:w-[45%] w-full text-center  "
-        >
-          {productDetails?.image?.map((item, index) => (
-            <SwiperSlide key={index} className="">
-              <ImageComponent
-                src={`${import.meta.env.VITE_Image_BASE_URL}${item?.url}`}
-                cardCss="md:w-[80%] w-[80%] h-[36vh] md:h-[50vh] m-auto"
-                imgCss="object-cover w-full h-full rounded-lg p-4"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <div className="md:w-[55%] w-full ">
-          <h2 className="md:text-3xl text-xl font-semibold">
-            {productDetails?.title}
-          </h2>
-          <p className="mt-3 text-gray-700">{productDetails?.description}</p>
-          <div className="mt-4">
-            <h5 className=" uppercase  text-sm  font-semibold mb-2 flex gap-2 ">
-              Avg Customer Rating{" "}
-              <Link
-                to="/review"
-                className="text-blue-700  capitalize cursor-pointer"
-              >
-                ( Write a review )
-              </Link>
-            </h5>
-            <div className="flex gap-1">
-              {Array.from({ length: Math.round(4.5) }, (_, index) => (
-                <StarsIcon key={index} style={{ fill: "#ffae00" }} />
-              ))}
-              <span className="text-gray-500">( 230 reviews )</span>
-            </div>
-            <div className="my-4 flex items-center gap-2">
-              <label htmlFor="">Delivery</label>
+        {/* Product Info */}
+        <div className="space-y-2 pr-20">
+          <p className="text-sm text-gray-500">Main Fashion</p>
+          <h2 className="text-2xl font-bold">{productDetails?.title}</h2>
+          <p className="text-xl font-semibold text-black">
+            ₹ {productDetails?.OrigialPrice || 0}
+          </p>
+
+          <button
+            onClick={handleAddToCart}
+            className="bg-black text-white w-full py-3 rounded-full text-sm font-medium"
+          >
+            Add to Cart
+          </button>
+
+          {/* Pincode Check */}
+          <div className="pt-3">
+            <h4 className="font-semibold mb-2">Check Delivery Availability</h4>
+            <div className="flex gap-3">
               <input
-                type="number"
-                name="pincode"
+                type="text"
                 value={deliveryPincode}
                 onChange={(e) => setDeliveryPincode(e.target.value)}
-                className="outline-none border-b-2 border-black p-2"
-                placeholder="Enter Delivery Pincode"
+                placeholder="Enter Pincode"
+                className="border px-3 py-2 rounded w-full"
               />
-              <button className="text-blue-500" onClick={checkServiceability}>
+              <button
+                onClick={checkServiceability}
+                className="bg-gray-800 text-white px-4 py-2 rounded"
+              >
                 {loading ? "Checking..." : "Check"}
               </button>
             </div>
-
+            {error && <p className="text-red-500 mt-2">{error}</p>}
             {serviceResponse && (
-              <div className="text-green-600 text-sm mt-2">
-                {serviceResponse.success ? (
-                  <>
-                    ✅ Delivery is available.
-                    <br />
-                    Mode: {serviceResponse.mode}
-                    <br />
-                    COD: {serviceResponse.cod ? "Available" : "Not Available"}
-                  </>
-                ) : (
-                  <>❌ Delivery not available.</>
-                )}
+              <p className="text-green-600 mt-2">
+                Delivery Available:{" "}
+                {serviceResponse.data?.delivery_available ? "Yes ✅" : "No ❌"}
+              </p>
+            )}
+          </div>
+
+          <Accordion className="rounded-md border border-none shadow-sm">
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <h3 className="font-semibold">
+                Description & Fit
+              </h3>
+            </AccordionSummary>
+            <AccordionDetails>
+              <p className="text-sm text-gray-600">
+                {productDetails?.description ||
+                  "Loose fit hoodie in medium-weight cotton-blend fleece with a generous, but not oversized silhouette. Jersey-lined drawstring hood, dropped shoulders, long sleeves, and a kangaroo pocket. Wide ribbing at cuffs and hem. Soft brushed inside."}
+              </p>
+            </AccordionDetails>
+          </Accordion>
+
+          
+
+<Accordion className="shadow-none mt-4" style={{border:"none"}}>
+  <AccordionSummary
+    expandIcon={<ExpandMoreIcon />}
+    aria-controls="panel2a-content"
+    id="panel2a-header"
+    className="px-0"
+  >
+    <h3 className="font-semibold text-lg">Shipping Info</h3>
+  </AccordionSummary>
+
+  <AccordionDetails className="px-0">
+    <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+      {/* Discount */}
+      <div className="flex items-center gap-3 rounded-xl p-4 shadow-sm"  style={{ border: "1px solid whitesmoke" }}>
+        <LocalOfferIcon className="text-black" />
+        <div>
+          <p className="text-xs text-gray-500 font-medium">Disc</p>
+          <p className="text-sm font-semibold text-black"><b>50%</b></p>
+        </div>
+      </div>
+
+      {/* Package */}
+      <div className="flex items-center gap-3 border rounded-xl p-4 shadow-sm"  style={{ border: "1px solid whitesmoke" }}>
+        <Inventory2Icon className="text-black" />
+        <div>
+          <p className="text-xs text-gray-500 font-medium">Package</p>
+          <p className="text-sm font-semibold text-black"><b>Regular Package</b></p>
+        </div>
+      </div>
+
+      {/* Delivery */}
+      <div className="flex items-center gap-3 border rounded-xl p-2 shadow-sm"  style={{ border: "1px solid whitesmoke" }}>
+        <LocalShippingIcon className="text-black" />
+        <div>
+          <p className="text-xs text-gray-500 font-medium">Delivery</p>
+          <p className="text-sm text-black mt-1"><b>3–4 Working Days</b></p>
+        </div>
+      </div>
+
+      {/* Estimated */}
+      <div className="flex items-center gap-3 border rounded-xl p-4 shadow-sm"  style={{ border: "1px solid whitesmoke" }}>
+        <EventIcon className="text-black" />
+        <div>
+          <p className="text-xs text-gray-500 font-medium">Estimated</p>
+          <p className="text-sm font-semibold text-black"><b>10–12 October 2024</b></p>
+        </div>
+      </div>
+    </div>
+  </AccordionDetails>
+</Accordion>
+
+          </div>   
+      </div>
+
+      {/* Ratings */}
+      <div className="grid md:grid-cols-2 gap-10 mt-16">
+        <div className="text-center md:text-left">
+          <p className="text-5xl font-bold">
+            4.5<span className="text-2xl text-gray-500"> / 5</span>
+          </p>
+          <p className="text-sm text-gray-400 mt-1">(50 New Reviews)</p>
+          <div className="mt-4 space-y-2 text-sm">
+            {[5, 4, 3, 2, 1].map((star) => (
+              <div key={star} className="flex items-center gap-2">
+                <span className="w-5">{star}★</span>
+                <div className="bg-gray-200 rounded h-2 flex-1">
+                  <div className="bg-black h-2 rounded w-[80%]"></div>
+                </div>
               </div>
-            )}
+            ))}
+          </div>
+        </div>
 
-            {error && (
-              <div className="text-red-600 text-sm mt-2">❌ {error}</div>
-            )}
-
-            <h2 className="md:text-3xl text-xl  font-semibold mt-6 ">
-              ₹ {productDetails?.OrigialPrice}
-            </h2>
-            <div className="flex gap-4  mt-6">
-              <button
-                onClick={handleAddToCart}
-                className="bg-blue-800 md:text-md text-sm uppercase text-white px-4 py-2 rounded-md cursor-pointer"
-              >
-                Add To Cart
-              </button>
-              <button className="bg-green-600 md:text-md uppercase text-sm text-white px-4 py-2 rounded-md cursor-pointer">
-                Add To Wish
-              </button>
+        {/* Review */}
+        <div className="border rounded-xl p-4">
+          <div className="flex gap-4 items-start">
+            <img
+              src="https://randomuser.me/api/portraits/men/75.jpg"
+              alt="Alex"
+              className="w-12 h-12 rounded-full"
+            />
+            <div>
+              <div className="flex justify-between items-center">
+                <h4 className="font-semibold">Alex Mathio</h4>
+                <p className="text-sm text-gray-400">13 Oct 2024</p>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                “NextGen’s dedication to sustainability and ethical practices resonates strongly
+                with today’s consumers.”
+              </p>
             </div>
           </div>
         </div>
       </div>
-      {/* 
-      <div className="md:mt-10 mt-6">
-        <h2 className="md:text-2xl text-xl font-semibold">
-          Product Information{" "}
-        </h2>
-        <div>
-          <p className="text-gray-800 mt-3 md:text-lg text-sm">
-            Avg Customer Rating As our friends and families hover in the kitchen
-            lets remember they are hungering for more than physical food. I
-            believe the light in a home shines brightest in the kitchen, Let
-            Your Light Shine! - Mary Jo Montanye, Grandmas Simple Cookbook
-            Presenting our new pair of serving trays with a unique color
-            palette, that looks pretty in💮 All online payment methods are
-            accepted. ✅
-          </p>
-          <table className="md:w-[60%] w-full mt-6 border-collapse border border-gray-300">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border px-4 py-2 md:text-lg text-sm font-semibold text-left">
-                  FEATURES
-                </th>
-                <th className="border px-4 py-2 md:text-lg text-sm font-semibold text-left">
-                  DESCRIPTION
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {featuresData.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-100">
-                  <td className="border px-4 md:text-lg text-sm py-2">
-                    {item.feature}
-                  </td>
-                  <td className="border px-4 md:text-lg text-sm py-2">
-                    {item.description}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div> */}
 
-      {/* <div className="mt-10">
-        <h2 className="md:text-2xl text-xl font-semibold flex items-center gap-2">
-          Reviews{" "}
-          <b className="text-primary">
-            4.0 <StarsIcon />
-          </b>{" "}
-        </h2>
-        <div className="my-6">
-          <Swiper
-            slidesPerView={isLg ? 3 : isMd ? 2 : isSm && 1}
-            spaceBetween={30}
-            freeMode={true}
-            pagination={{
-              clickable: true,
-            }}
-            modules={[FreeMode, Pagination]}
-            className=" cursor-grab  "
-          >
-            {[1, 2, 3, 4, 5, 6].map((item, index) => (
-              <SwiperSlide key={index} className=" p-2 shadow-2xl">
-                <ImageComponent cardCss=" h-[30vh]" />
-                <div className="flex gap-2 items-center mt-5">
-                  <ImageComponent cardCss="  size-16" variant="circular" />
-                  <div>
-                    <h4 className="text-[16px] font-semibold">Profile Name</h4>
-                    <p className="text-sm  text-gray-800">Customer</p>
-                  </div>
-                </div>
-                <p className="md:text-lg text-sm text-gray-600 mt-3">
-                  I’ve been using this electric scooter for the past 2 years and
-                  it is very helpful. I take it wout when I have to go out for a
-                  market. It helps me connect to the nature. ALong with this a
-                  helmet would be great.{" "}
-                </p>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </div> */}
-
-      <div className="py-4">
-        <h2 className="md:text-2xl text-xl font-semibold uppercase">
-          SIMILAR Product
-        </h2>
-
-        <div className="grid md:grid-cols-3 sm:grid-cols-2  gap-6 mt-4">
+      {/* You Might Also Like */}
+      <div className="mt-16">
+        <h3 className="text-xl font-semibold mb-6">You might also like</h3>
+        <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
           {product?.slice(0, 3).map((item, index) => (
             <ShopCard key={index} id={index} item={item} />
           ))}

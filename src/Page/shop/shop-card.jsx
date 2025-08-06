@@ -5,6 +5,7 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../feature/leafSlice";
+import { motion } from "framer-motion";
 
 export const ShopCard = ({ id, item }) => {
   const [isFavorite, setIsFavorite] = useState([]);
@@ -29,27 +30,43 @@ export const ShopCard = ({ id, item }) => {
     dispatch(addToCart({ ...item, quantity: 1 }));
   };
 
+  // ✅ Safe access to image URL
+  const imageUrl = item?.image?.[0]?.url
+  ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
+  : "/placeholder.png";
+
+console.log("Image URL:", imageUrl);
   return (
     <div
       onClick={() => showProductDetails(item?.documentId)}
       className="bg-white border border-gray-200 p-6 rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer"
     >
-       {/* <FavoriteIcon
-          className="cursor-pointer"
-          onClick={(e) => handleAddFavorite(e, id)}
-          style={{
-            width: "28px",
-            height: "28px",
-            fill: isFavorite.includes(id) ? "#1e3a8a" : "#ccc",
-            right:0
-          }}
-        /> */}
+      {/* Optional: Favorite Icon */}
+      {/* <FavoriteIcon
+        className="cursor-pointer"
+        onClick={(e) => handleAddFavorite(e, id)}
+        style={{
+          width: "28px",
+          height: "28px",
+          fill: isFavorite.includes(id) ? "#1e3a8a" : "#ccc",
+        }}
+      /> */}
+
       <div className="w-full h-64 flex justify-center items-center overflow-hidden">
-        <ImageComponent
-          src={`${import.meta.env.VITE_Image_BASE_URL}${item?.image[0]?.url}`}
-          cardCss="w-full h-full"
-          imgCss="object-contain w-full h-full"
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: true }}
+        >
+          <ImageComponent
+            src={item?.image?.[0]?.url
+      ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
+      : "/placeholder.png"}
+            cardCss="w-full h-full"
+            imgCss="object-contain w-full h-full"
+          />
+        </motion.div>
       </div>
 
       <div className="mt-4 flex flex-col items-center">
