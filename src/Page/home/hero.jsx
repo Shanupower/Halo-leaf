@@ -48,13 +48,13 @@ export const Hero = () => {
 
         <div className="mt-6 flex flex-col md:flex-row gap-4">
           <a
-            href="#products"
+            href="/product"
             className="px-6 py-3 bg-white text-green-700 rounded-full font-semibold hover:bg-green-100 transition"
           >
             See Products
           </a>
           <a
-            href="#contact"
+            href="/contact-us"
             className="px-6 py-3 border border-white rounded-full font-semibold hover:bg-white hover:text-green-700 transition"
           >
             Contact Us

@@ -7,7 +7,6 @@ const ContactForm = () => {
     phone: "",
     location: "",
     subject: "",
-    department: "",
     message: "",
   });
 
@@ -25,7 +24,6 @@ const ContactForm = () => {
       errs.phone = "Valid 10-digit phone is required";
     if (!formData.location) errs.location = "Location is required";
     if (!formData.subject) errs.subject = "Subject is required";
-    if (!formData.department) errs.department = "Select a department";
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -47,7 +45,6 @@ const ContactForm = () => {
         phone: "",
         location: "",
         subject: "",
-        department: "",
         message: "",
       });
     }
@@ -130,21 +127,6 @@ const ContactForm = () => {
             {errors.subject && <p className="text-red-500 text-sm mt-1">{errors.subject}</p>}
           </div>
 
-          <div>
-            <select
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              className="p-3 rounded-md border border-gray-300 w-full"
-            >
-              <option value="">Select Department</option>
-              <option value="Atendimento">Atendimento</option>
-              <option value="Suporte Técnico">Suporte Técnico</option>
-              <option value="Outros">Outros</option>
-            </select>
-            {errors.department && <p className="text-red-500 text-sm mt-1">{errors.department}</p>}
-          </div>
-
           <div className="md:col-span-2">
             <textarea
               name="message"
@@ -153,15 +135,13 @@ const ContactForm = () => {
               onChange={handleChange}
               placeholder="Message"
               className="p-3 rounded-md border border-gray-300 w-full"
-            ></textarea>
-          
-
-          <button
-            type="submit"
-            className="mt-5 bg-green-600 hover:bg-green-700 text-white px-10 py-3 rounded-full mx-auto block transition duration-300"
-          >
-            Submit
-          </button>
+            />
+            <button
+              type="submit"
+              className="mt-5 bg-green-600 hover:bg-green-700 text-white px-10 py-3 rounded-full mx-auto block transition duration-300"
+            >
+              Submit
+            </button>
           </div>
         </form>
       </div>
