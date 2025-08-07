@@ -11,10 +11,9 @@ export const Shop = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
-  const { categoryId } = useParams(); // Get category from URL path
+  const { categoryId } = useParams();
   const navigate = useNavigate();
 
-  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -22,7 +21,6 @@ export const Shop = () => {
         const fetched = res.data.data || [];
         setCategories(fetched);
 
-        // Match URL categoryId to category name
         if (categoryId) {
           const selectedCategory = fetched.find(
             (cat) => cat.documentId === categoryId
@@ -43,12 +41,10 @@ export const Shop = () => {
     fetchCategories();
   }, [categoryId]);
 
-  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         let url = "http://97.74.93.91:1330/api/products?populate=*";
-
         if (categoryId) {
           url += `&filters[category][documentId][$eq]=${categoryId}`;
         }
@@ -63,18 +59,16 @@ export const Shop = () => {
     fetchProducts();
   }, [categoryId]);
 
-  // Pagination logic
   const totalPages = Math.ceil(products.length / productsPerPage);
   const displayedProducts = products.slice(
     (currentPage - 1) * productsPerPage,
     currentPage * productsPerPage
   );
 
-  // Handle category change
   const handleCategoryClick = (id, name) => {
     setCurrentPage(1);
     if (id) {
-      navigate(`/product/${id}`);
+      navigate(`/product/category/${id}`);
     } else {
       navigate("/product");
     }
@@ -132,7 +126,6 @@ export const Shop = () => {
         </div>
       )}
 
-      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

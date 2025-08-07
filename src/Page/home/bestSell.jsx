@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ReactFlipCard from 'reactjs-flip-card';
 import 'reactjs-flip-card/dist/ReactFlipCard.css';
+import { motion } from "framer-motion";
+
+// Importing images
 import ProductImage1 from '../../assets/Homepage/1.png';
 import ProductImage2 from '../../assets/Homepage/2.png';
 import ProductImage3 from '../../assets/Homepage/3.png';
@@ -10,10 +14,8 @@ import ProductImage6 from '../../assets/Homepage/6.png';
 import ProductImage7 from '../../assets/Homepage/7.png';
 import ProductImage8 from '../../assets/Homepage/8.png';
 import ProductImage9 from '../../assets/Homepage/9.png';
-import { useNavigate } from 'react-router-dom';
-import { motion } from "framer-motion";
-import { useEffect, useState } from 'react';
 
+// Hook to detect mobile screen
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -25,11 +27,7 @@ const useIsMobile = () => {
   return isMobile;
 };
 
-// const cards = Array(9).fill({
-//   description: 'Eco-friendly, high-quality product for sustainable living.',
-//   image: ProductImage
-// });
-
+// Data
 const cards = [
   {
     image: ProductImage1,
@@ -70,7 +68,6 @@ const cards = [
     list4: "Ideal for high-value and sensitive crops",
     categoryId: "xkvt03fkolfqdiem3s1s6kxs",
     category: "bio-nematicides",
-
   },
   {
     image: ProductImage8,
@@ -89,7 +86,6 @@ const cards = [
     list4: "Safe, sustainable support for every growth stage",
     categoryId: "optx1dl0o3jafx8o4y8ns3qk",
     category: "bio-stimulants",
-
   },
   {
     image: ProductImage6,
@@ -118,12 +114,20 @@ const cards = [
     list4: "Safe for organic and conventional farming",
     categoryId: "d8msvofzwys2vipqq8xmy3et",
     category: "special-products",
-
   },
-]
+];
+
 export const BestSell = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+
+  const handleNavigate = (categoryId) => {
+    if (categoryId) {
+      navigate(`/product/category/${categoryId}`);
+    } else {
+      navigate("/product");
+    }
+  };
 
   return (
     <section id="best-sell-section" className="md:px-[10%] sm:px-[5%] px-2 py-4 md:mt-8 sm:mt-4">
@@ -170,18 +174,20 @@ export const BestSell = () => {
               backComponent={
                 <>
                   <span className="font-bold text-lg text-black">{card.content}</span>
-                  <ul className='mt-2'>
+                  <ul className='mt-2 text-sm text-gray-700'>
                     <li>1. {card.list1}</li>
                     <li>2. {card.list2}</li>
                     <li>3. {card.list3}</li>
                     <li>4. {card.list4}</li>
                   </ul>
-                  <button
-                    className="mt-5 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full transition duration-300"
-                    onClick={() => navigate(`/product/${card.categoryId}`)} // ✅ This will now work
-                  >
-                    View Products
-                  </button>
+                  {card.categoryId && (
+                    <button
+                      className="mt-5 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full transition duration-300"
+                      onClick={() => handleNavigate(card.categoryId)}
+                    >
+                      View Products
+                    </button>
+                  )}
                 </>
               }
             />

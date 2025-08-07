@@ -22,8 +22,8 @@ export const ShopCard = ({ id, item }) => {
   };
 
   const showProductDetails = (id) => {
-    navigate(`/product/${id}`);
-  };
+  navigate(`/product/details/${id}`);
+};
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
