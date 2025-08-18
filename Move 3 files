@@ -1,0 +1,24 @@
+from flask import Flask
+from arango import ArangoClient
+from config import Config
+from users.routes import user
+    
+# initalizing and creating the arangodb client
+client = ArangoClient()
+sys_db = client.db('_system',username='root', password='root')
+
+if not sys_db.has_database('redsoft'):
+    sys_db.create_database('redsoft')
+
+db = client.db('redsoft', username='root', password='root')
+
+def create_app(config_class=Config) :
+    
+    # initializing the flask app instance
+        app = Flask(__name__)
+        app.config.from_object(Config)
+         
+        
+        app.register_blueprint(user)
+
+        return app

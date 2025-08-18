@@ -3,14 +3,13 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { AnimatePresence, motion } from "framer-motion";
+
 // Layout
 import { HomeLayout } from "./layouts";
 
 // Components
 import Loading from "./component/model/loading";
 import Preloader from './component/common/Preloader';
-import ScrollToTop from './component/common/ScrollToTop'; 
-
 
 // Pages
 import {
@@ -33,7 +32,6 @@ import {
   UserOrder,
   WhyUs,
   Wishlist,
-
 } from "./Page";
 
 // Redux actions
@@ -58,7 +56,6 @@ const AnimatePage = ({ children }) => {
 };
 
 function App() {
-  
   const dispatch = useDispatch();
   const location = useLocation();
   const { user, product, loading, category } = useSelector(
@@ -86,7 +83,6 @@ function App() {
 
   return (
     <>
-    
       {preloaderLoading && (
         <Preloader
           onFinish={() => setPreloaderLoading(false)}
@@ -95,11 +91,9 @@ function App() {
       )}
       {!preloaderLoading && (
         <>
-        <ScrollToTop />
-          <AnimatePresence mode="wait" >
+          <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<HomeLayout showHeader={!preloaderLoading} />}>
-                
                 <Route
                   index
                   element={
@@ -129,22 +123,6 @@ function App() {
                   element={
                     <AnimatePage>
                       <Shop />
-                    </AnimatePage>
-                  }
-                />
-                <Route
-                  path="/product/category/:categoryId"
-                  element={
-                    <AnimatePage>
-                      <Shop />
-                    </AnimatePage>
-                  }
-                />
-                <Route
-                  path="/product/details/:id"
-                  element={
-                    <AnimatePage>
-                      <ProductDetails />
                     </AnimatePage>
                   }
                 />
@@ -277,10 +255,7 @@ function App() {
                   </AnimatePage>
                 }
               />
-             
             </Routes>
-
-            
           </AnimatePresence>
 
           <ToastContainer

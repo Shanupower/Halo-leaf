@@ -26,7 +26,9 @@ const timelineData = [
     title: 'Building Quality and Research Networks',
     image: img2009,
     entries: [
-      `2009: ISO 9001:2008 certification; recognition by Indian Institute of Horticultural Research (IIHR).`,
+      `2009: Large Scale Manufacturing unit establisted in Nalgonda.`,
+       `ISO 9001:2008 certification.`,
+       `Recognition by Indian Institute of Horticultural Research (IIHR).`,
       `2010: MOU with IIHR to trial horticultural bio-inputs.`,
       `2011: Joint studies with Loyola Academy on formulation stability.`,
       `2012: Collaborative research with KL University on crop-specific microbial blends.`,
@@ -37,22 +39,34 @@ const timelineData = [
     title: 'Establishing In-House Excellence',
     image: img2013,
     entries: [
-      `2013: DSIR recognition of our Hyderabad labs as an In-House R&D Centre.`,
+      `2013: DSIR recognition of our R&D Unit.`,
       `2014: Partnership with Agri-Biotech Foundation at VIT for next-gen seed coating technologies.`,
       `2015: Collaboration with Tea Research Association on microbe-mediated stress tolerance.`,
-      `2016: Work with Institute of Forest Genetics & Tree Breeding on bio-solutions for tree crops.`,
+      `2016: Collaboration with Institute of Forest Genetics & Tree Breeding on bio-solutions for tree crops.`,
     ],
   },
   {
-    period: '2017–2021',
-    title: 'Certification, Awards & Global Reach',
+    period: '2017–2020',
+    title: 'Rapid Progress',
     image: img2017,
     entries: [
-      `2017: Ecocert Organic Certification and MOU with Assam Agricultural University.`,
+      `2017: Ecocert Organic Certification `,
+      `MOU with Assam Agricultural University.`,
       `2018: Collaboration with Prof. Jayashankar Telangana State Agricultural University.`,
-      `2019: Launched India's first indigenous Bt biopesticide; Best R&D Product Development award.`,
-      `2020: National Award for Excellence in R&D.`,
+      `2019: Launched India's first indigenous Bt biopesticide`,
+      `Best R&D Product Development award - IIAB`,
+      `2020: National Award for Excellence in R&D -FTCCI`,
+    ],
+  },
+  {
+    period: '2021–2024',
+    title: 'Certification, Awards & Global Reach ',
+    image: img2017,
+    entries: [
       `2021: Field trials with ICRISAT, taking our research global.`,
+      `2024 :Best Biopesticide Product of the Year -Govt of India, MSME`,
+      `Successful MSME company of the era having presence for more than two decades -PMFAI `,
+      `Launched 3 bio-pesticides to manage tea pathogens and insect pests in partnership with Tea Research Association  `,
     ],
   },
   {
@@ -99,19 +113,35 @@ export const WhyUs = () => {
 
   return (
     <div className="page-wrapper">
-      <div className="section-timeline-heading">
+       <div className="section-timeline-heading">
         <div className="container">
           <div className="padding-vertical-xlarge">
             <div className="timeline-main_heading-wrapper">
               <div className="margin-bottom-medium">
-                <h2>Our Journey</h2>
+                <h2>Why Us ?</h2>
+              </div>
+              <p className="paragraph-large">
+              Of humble origins, starting on just half an acre in 2003, Varsha Bioscience is now one of India’s leading agri-biotech companies. With a multiple award-winning R&D unit and a large-scale production facility established in 2008, we focus on sustainable solutions for plant health, nutrition, and protection.
+Backed by a team of 100+ committed professionals, we uphold the highest quality standards while driving scientific advancements in agriculture.
+Founded by award-winning scientist Dr. A. John Peter Varsha began with the sole mission of countering the harmful effects of chemicals in soil. Our journey started with just two products — Trichoderma viride and Pseudomonas fluorescens. Today, our portfolio includes over 50 registered products, supported by a microbial inventory in the thousands.
+We believe that with consistent effort, research, and outreach, sustainable agriculture will not just be possible — it will become the norm in the years ahead.
+
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="section-timeline-heading">
+        <div className="container">
+            <div className="timeline-main_heading-wrapper">
+              <div className="margin-bottom-medium">
+                <h2>Our Legacy </h2>
               </div>
               <p className="paragraph-large">
                 Over two decades of pioneering bio-agriculture innovation. <br />
                 Discover our journey from research to revolutionizing sustainable farming.
               </p>
             </div>
-          </div>
         </div>
       </div>
 

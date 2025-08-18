@@ -52,29 +52,22 @@ export const Hero = () => {
         </h1>
         
         {/* Static + Animated Part */}
-        <div className="text-xl md:text-3xl font-medium text-green-200 mb-6 flex justify-center">
-  <div className="inline-flex items-center gap-2">
-    <span>We provide solutions in</span>
-    <span
-      className="relative inline-block"
-      style={{ minWidth: "28ch", textAlign: "left" }}
-    >
-      <span
-        className={`inline-block transition-transform duration-500 ease-in-out`}
-        style={{
-          display: "inline-block",
-          transform: flipStage === "hide" ? "rotateX(90deg)" : "rotateX(0deg)",
-          transformOrigin: "center",
-          backfaceVisibility: "hidden",
-        }}
-      >
-        {categories[currentIndex]}
-      </span>
-    </span>
-  </div>
-</div>
+        <div className="text-xl md:text-3xl font-medium text-green-200 mb-6 flex flex-wrap justify-center items-center gap-2">
+          <span>We provide solutions in</span>
+          <span
+            className={`inline-block transition-transform duration-500 ease-in-out`}
+            style={{
+              display: "inline-block",
+              transform: flipStage === "hide" ? "rotateX(90deg)" : "rotateX(0deg)",
+              transformOrigin: "center",
+              backfaceVisibility: "hidden",
+            }}
+          >
+            {categories[currentIndex]}
+          </span>
+        </div>
 
-        <div className="mt-6 flex flex-col md:flex-row gap-4 justify-left">
+        <div className="mt-6 flex flex-col md:flex-row gap-4">
           <a
             href="/product"
             className="px-6 py-3 bg-white text-green-700 rounded-full font-semibold hover:bg-green-100 transition"

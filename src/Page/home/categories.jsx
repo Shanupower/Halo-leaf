@@ -3,11 +3,11 @@ import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
 
 const stats = [
-  { end: 19, label: 'CIB&RC Registered Products' },
-  { end: 14, label: 'Biofertilizers under FCO, 1985' },
-  { end: 15, label: 'Biostimulants under FCO, 1985' },
-  { end: 13, label: 'Plant Nutrients under FCO, 1985' },
-  { end: 23, label: 'Ecocert Certified Organic Products' },
+  { end: 26, label: 'Biopesticides under CIBRC' },
+  { end: 24, label: 'Biofertilizers under FCO' },
+  { end: 15, label: 'Biostimulants under G2/G3' },
+  { end: 13, label: 'Plant Nutrients under FCO' },
+  { end: 30, label: 'Ecocert Certified Organic Products' },
 ];
 
 export const Categories = () => (

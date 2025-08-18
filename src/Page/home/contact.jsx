@@ -53,13 +53,21 @@ const ContactForm = () => {
   return (
     <section className="bg-gray-100 py-16 px-4">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-green-700 mb-4 leading-tight">
-          Connect with Us
-        </h2>
+      <h2 className="text-3xl md:text-4xl font-bold text-green-700 mb-4 leading-tight">
+  Connect with Us -{" "}
+  <a
+    href="https://api.whatsapp.com/send/?phone=918285684222&text&type=phone_number&app_absent=0"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-green-700 hover:underline"
+  >
+    +91 8285684222
+  </a>
+</h2>
         <p className="text-gray-700 mb-10 text-base md:text-lg">
           Need help with a product or order? Reach out through the contact form below.
           <br />
-          Our support team is ready to guide you and ensure a smooth experience with Halo Leaf.
+          Our support team is ready to guide you and ensure a smooth experience with Varsha.
         </p>
 
         <form
