@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Logo from "../../../assets/Logo2.png";
+import Logo from "../../../assets/Logo3.png";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";

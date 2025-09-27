@@ -30,15 +30,15 @@ export const ShopCard = ({ id, item }) => {
     dispatch(addToCart({ ...item, quantity: 1 }));
   };
 
-  // ✅ Safe access to image URL
-  const imageUrl = item?.image?.[0]?.url
-  ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
-  : "/placeholder.png";
+  // ✅ Safe access to image URL for Strapi
+  const imageUrl = item?.attributes?.image?.data?.attributes?.url
+    ? `http://13.201.41.1:1337${item.attributes.image.data.attributes.url}`
+    : "/placeholder.png";
 
 console.log("Image URL:", imageUrl);
   return (
     <div
-      onClick={() => showProductDetails(item?.documentId)}
+      onClick={() => showProductDetails(item?.id)}
       className="bg-white border border-gray-200 p-6 rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer"
     >
       {/* Optional: Favorite Icon */}
@@ -60,8 +60,8 @@ console.log("Image URL:", imageUrl);
           viewport={{ once: true }}
         >
           <ImageComponent
-            src={item?.image?.[0]?.url
-      ? `${import.meta.env.VITE_Image_BASE_URL}${item.image[0].url}`
+            src={item?.attributes?.image?.data?.attributes?.url
+      ? `http://13.201.41.1:1337${item.attributes.image.data.attributes.url}`
       : "/placeholder.png"}
             cardCss="w-full h-full"
             imgCss="object-contain w-full h-full"
@@ -71,10 +71,10 @@ console.log("Image URL:", imageUrl);
 
       <div className="mt-4 flex flex-col items-center">
         <h3 className="text-lg font-medium text-gray-800 text-center">
-          {item?.title || "Product Name"}
+          {item?.attributes?.title || "Product Name"}
         </h3>
         <p className="text-sm text-gray-500 mt-1">
-          ₹{item?.OrigialPrice || "0.00"}
+          ₹{item?.attributes?.price || "0.00"}
         </p>
       </div>
     </div>

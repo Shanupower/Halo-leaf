@@ -21,6 +21,7 @@ const initialState = {
   wishList: [],
   category: [],
   product: [],
+  testimonials: [],
 
   OrderItem: [{ item: [], totalPrice: 0, address: {}, paymentInfo: {} }],
 };
@@ -107,18 +108,60 @@ export const UpdateUserAddress = createAsyncThunk(
 
 export const fetchProductList = createAsyncThunk("shop/product", async () => {
   try {
+    console.log("Fetching products from API...");
     const response = await get(`/products?populate=*`);
-    return response.data;
+    console.log("Products API Response:", response);
+    console.log("Products Data:", response.data);
+    console.log("Products Data.data:", response.data.data);
+    // Return the actual data array from Strapi response
+    return response.data.data || [];
   } catch (error) {
+    console.error("Products API Error:", error);
     return error;
   }
 });
 
 export const fetchCategorytList = createAsyncThunk("category", async () => {
   try {
+    console.log("🚀 Fetching categories from API...");
     const response = await get(`/categories?populate=*`);
-    return response.data;
+    console.log("📦 Categories API Response:", response);
+    console.log("📊 Categories Data:", response.data);
+    console.log("📋 Categories Data.data:", response.data?.data);
+    
+    // Check if response.data.data exists, otherwise use response.data directly
+    const categoriesData = response.data?.data || response.data || [];
+    console.log("✅ Final categories data being returned:", categoriesData);
+    console.log("📏 Categories count:", categoriesData.length);
+    
+    // Log first category structure for debugging
+    if (categoriesData.length > 0) {
+      console.log("🔍 First category in response:", categoriesData[0]);
+      console.log("🖼️ First category image:", categoriesData[0].image);
+    } else {
+      console.warn("⚠️ No categories found in API response");
+    }
+    
+    // Return the actual data array from Strapi response
+    return categoriesData;
   } catch (error) {
+    console.error("❌ Categories API Error:", error);
+    console.error("❌ Error details:", error.response?.data || error.message);
+    return [];
+  }
+});
+
+export const fetchTestimonialsList = createAsyncThunk("testimonials", async () => {
+  try {
+    console.log("Fetching testimonials from API...");
+    const response = await get(`/test?populate=*`);
+    console.log("Testimonials API Response:", response);
+    console.log("Testimonials Data:", response.data);
+    console.log("Testimonials Data.data:", response.data.data);
+    // Return the actual data array from Strapi response
+    return response.data.data || [];
+  } catch (error) {
+    console.error("Testimonials API Error:", error);
     return error;
   }
 });
@@ -289,13 +332,29 @@ const leafSlice = createSlice({
 
     // Fetch CategorytList
     builder.addCase(fetchCategorytList.pending, (state, action) => {
+      console.log("🔄 Categories API pending...");
       state.loading = true;
     });
     builder.addCase(fetchCategorytList.fulfilled, (state, action) => {
+      console.log("✅ Categories API fulfilled with payload:", action.payload);
       state.loading = false;
       state.category = action.payload;
+      console.log("💾 Categories stored in Redux state:", state.category);
     });
     builder.addCase(fetchCategorytList.rejected, (state, action) => {
+      console.error("❌ Categories API rejected:", action.payload);
+      state.loading = false;
+    });
+
+    // Fetch TestimonialsList
+    builder.addCase(fetchTestimonialsList.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchTestimonialsList.fulfilled, (state, action) => {
+      state.loading = false;
+      state.testimonials = action.payload;
+    });
+    builder.addCase(fetchTestimonialsList.rejected, (state, action) => {
       state.loading = false;
     });
   },

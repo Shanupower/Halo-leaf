@@ -38,8 +38,6 @@ import {
 
 // Redux actions
 import {
-  fetchProductList,
-  fetchCategorytList,
   fetchUserDetails,
 } from "./feature/leafSlice";
 
@@ -61,7 +59,7 @@ function App() {
   
   const dispatch = useDispatch();
   const location = useLocation();
-  const { user, product, loading, category } = useSelector(
+  const { user, product, loading, category, testimonials } = useSelector(
     (state) => state.leaf
   );
   const id = localStorage.getItem("leafUserid");
@@ -72,12 +70,7 @@ function App() {
     if (id && !user?.id) {
       dispatch(fetchUserDetails(id));
     }
-    if (product.length === 0) {
-      dispatch(fetchProductList());
-    }
-    if (category?.length === 0) {
-      dispatch(fetchCategorytList());
-    }
+    // Products, categories, and testimonials are now loaded in the preloader
   };
 
   useEffect(() => {

@@ -2,80 +2,67 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './AboutUs.css';
 
-// Import your images
-import img2003 from '../../assets/Aboutus/2003-2008.jpg';
-import img2009 from '../../assets/Aboutus/2009-2012.jpg';
-import img2013 from '../../assets/Aboutus/2013-2016.jpg';
-import img2017 from '../../assets/Aboutus/2017-2021.jpg';
-import imgToday from '../../assets/Aboutus/today.jpg';
+// Images removed from process section
 
 const timelineData = [
   {
-    period: '2003–2008',
-    title: 'Laying the Scientific Foundations',
-    image: img2003,
+    period: 'Step 1',
+    title: 'Leaf Collection & Selection',
     entries: [
-      `2003: Small team of microbiologists and agronomists unite to develop eco-friendly bio-inputs.`,
-      `2006: First major research partnership with Tamil Nadu Agricultural University on nitrogen-fixing strains.`,
-      `2007: Collaboration with ICFAI Centre for Biosciences on microbial formulation.`,
-      `2008: MOU with Indian Institute of Oilseeds Research and accreditation from Dun & Bradstreet.`,
+      `Carefully hand-picked fresh leaves from sustainable sources.`,
+      `Quality inspection ensures only the finest leaves are selected.`,
+      `Leaves are sorted by size, thickness, and quality standards.`,
+      `Natural drying process begins to preserve leaf integrity.`,
     ],
   },
   {
-    period: '2009–2012',
-    title: 'Building Quality and Research Networks',
-    image: img2009,
+    period: 'Step 2',
+    title: 'Cleaning & Preparation',
     entries: [
-      `2009: Large Scale Manufacturing unit establisted in Nalgonda.`,
-       `ISO 9001:2008 certification.`,
-       `Recognition by Indian Institute of Horticultural Research (IIHR).`,
-      `2010: MOU with IIHR to trial horticultural bio-inputs.`,
-      `2011: Joint studies with Loyola Academy on formulation stability.`,
-      `2012: Collaborative research with KL University on crop-specific microbial blends.`,
+      `Thorough cleaning removes dirt and impurities.`,
+      `Gentle washing with natural spring water.`,
+      `Careful inspection for any defects or damage.`,
+      `Preparation for the molding process begins.`,
     ],
   },
   {
-    period: '2013–2016',
-    title: 'Establishing In-House Excellence',
-    image: img2013,
+    period: 'Step 3',
+    title: 'Molding & Shaping',
     entries: [
-      `2013: DSIR recognition of our R&D Unit.`,
-      `2014: Partnership with Agri-Biotech Foundation at VIT for next-gen seed coating technologies.`,
-      `2015: Collaboration with Tea Research Association on microbe-mediated stress tolerance.`,
-      `2016: Collaboration with Institute of Forest Genetics & Tree Breeding on bio-solutions for tree crops.`,
+      `Leaves are carefully molded into desired shapes.`,
+      `Traditional techniques combined with modern precision.`,
+      `Each plate is individually crafted for consistency.`,
+      `Quality control ensures perfect form and structure.`,
     ],
   },
   {
-    period: '2017–2020',
-    title: 'Rapid Progress',
-    image: img2017,
+    period: 'Step 4',
+    title: 'Drying & Curing',
     entries: [
-      `2017: Ecocert Organic Certification `,
-      `MOU with Assam Agricultural University.`,
-      `2018: Collaboration with Prof. Jayashankar Telangana State Agricultural University.`,
-      `2019: Launched India's first indigenous Bt biopesticide`,
-      `Best R&D Product Development award - IIAB`,
-      `2020: National Award for Excellence in R&D -FTCCI`,
+      `Natural air-drying process preserves leaf properties.`,
+      `Controlled temperature and humidity conditions.`,
+      `Curing process enhances durability and strength.`,
+      `Final quality inspection before packaging.`,
     ],
   },
   {
-    period: '2021–2024',
-    title: 'Certification, Awards & Global Reach ',
-    image: img2017,
+    period: 'Step 5',
+    title: 'Quality Control & Packaging',
     entries: [
-      `2021: Field trials with ICRISAT, taking our research global.`,
-      `2024 :Best Biopesticide Product of the Year -Govt of India, MSME`,
-      `Successful MSME company of the era having presence for more than two decades -PMFAI `,
-      `Launched 3 bio-pesticides to manage tea pathogens and insect pests in partnership with Tea Research Association  `,
+      `Rigorous quality testing for strength and durability.`,
+      `Eco-friendly packaging materials used.`,
+      `Final inspection ensures product excellence.`,
+      `Ready for distribution to customers worldwide.`,
     ],
   },
   {
-    period: 'Today',
-    title: 'Leading the Bio-Ag Revolution',
-    image: imgToday,
+    period: 'Final',
+    title: 'Sustainable & Biodegradable',
     entries: [
-      `Serving thousands of farmers across India and partnering with global institutes.`,
-      `Portfolio of nine product categories, powered by ongoing R&D, state-of-the-art manufacturing, and sustainability.`,
+      `100% biodegradable and compostable products.`,
+      `Zero chemical treatment or harmful additives.`,
+      `Perfect for eco-conscious dining experiences.`,
+      `Supporting sustainable living and environmental protection.`,
     ],
   },
 ];
@@ -121,10 +108,10 @@ export const WhyUs = () => {
                 <h2>Why Us ?</h2>
               </div>
               <p className="paragraph-large">
-              Of humble origins, starting on just half an acre in 2003, Varsha Bioscience is now one of India’s leading agri-biotech companies. With a multiple award-winning R&D unit and a large-scale production facility established in 2008, we focus on sustainable solutions for plant health, nutrition, and protection.
-Backed by a team of 100+ committed professionals, we uphold the highest quality standards while driving scientific advancements in agriculture.
-Founded by award-winning scientist Dr. A. John Peter Varsha began with the sole mission of countering the harmful effects of chemicals in soil. Our journey started with just two products — Trichoderma viride and Pseudomonas fluorescens. Today, our portfolio includes over 50 registered products, supported by a microbial inventory in the thousands.
-We believe that with consistent effort, research, and outreach, sustainable agriculture will not just be possible — it will become the norm in the years ahead.
+              HaloLeaf is dedicated to revolutionizing sustainable dining with our premium biodegradable leaf plates. We combine traditional craftsmanship with modern quality standards to create eco-friendly alternatives to plastic and paper products.
+Our commitment to environmental sustainability drives every aspect of our production process. From carefully selecting the finest leaves to our meticulous manufacturing process, we ensure each product meets the highest standards of quality and environmental responsibility.
+Founded with the vision of creating a greener future, HaloLeaf specializes in crafting beautiful, functional, and completely biodegradable leaf plates. Our products are perfect for eco-conscious consumers, restaurants, and events looking to reduce their environmental footprint.
+We believe that sustainable living should be beautiful, practical, and accessible to everyone. Every HaloLeaf product represents our commitment to protecting our planet for future generations.
 
               </p>
             </div>
@@ -138,8 +125,8 @@ We believe that with consistent effort, research, and outreach, sustainable agri
                 <h2>Our Legacy </h2>
               </div>
               <p className="paragraph-large">
-                Over two decades of pioneering bio-agriculture innovation. <br />
-                Discover our journey from research to revolutionizing sustainable farming.
+                Crafting sustainable dining solutions with traditional expertise. <br />
+                Discover our meticulous process from leaf selection to your table.
               </p>
             </div>
         </div>
@@ -178,17 +165,6 @@ We believe that with consistent effort, research, and outreach, sustainable agri
                       </p>
                     ))}
                   </div>
-
-                  {item.image && (
-                    <div className="timeline_image-wrapper margin-bottom-medium">
-                      <img 
-                        src={item.image} 
-                        loading="lazy" 
-                        width="480" 
-                        alt={item.title}
-                      />
-                    </div>
-                  )}
 
                   {index === timelineData.length - 1 && (
                     <div className="margin-bottom-xlarge">

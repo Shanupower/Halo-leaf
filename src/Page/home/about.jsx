@@ -29,7 +29,7 @@ export const About = () => {
         </div>
         
         <p className="text-[1rem] md:text-[1.4rem] md:text-base text-gray-700 max-w-3xl md:max-w-2xl mx-auto leading-relaxed px-3" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '700', fontStyle: 'italic'}}>
-        To Break through the Barriers of Science and <br /> Develop Cutting-Edge Biological Solutions For The World
+        To Lead the Revolution in Sustainable Dining <br /> Through Innovative Biodegradable Leaf Products
     </p>
       </div>
 
@@ -44,7 +44,7 @@ export const About = () => {
         </div>
 
         <p className="text-base md:text-lg text-gray-600 max-w-2xl md:max-w-3xl mx-auto mb-8 md:mb-12 leading-relaxed px-4" style={{fontFamily: 'Inter, system-ui, -apple-system, sans-serif', fontWeight: '400'}}>
-        Advance sustainable agriculture with research-backed Biologicals that Protect Soil, Boost Yields, and Deliver Clean Food—today and long into the future.
+        Create beautiful, functional, and completely biodegradable dining solutions that protect our planet while enhancing every meal experience. We're committed to sustainable living through innovative leaf-based products.
         </p>
 
         <div className="flex items-center justify-center flex-wrap md:flex-nowrap relative mt-10">
@@ -57,11 +57,11 @@ export const About = () => {
     <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'left' ? 'text-white border-[#5ab334] transform scale-110' : ' text-gray-700'}`} style={hoveredCircle === 'left' ? {backgroundColor: '#5ab33480'} : {}}>
       {hoveredCircle === 'left' ? (
         <div className="text-sm leading-tight font-normal font-inter" style={{fontWeight: '600'}}>
-          Develop cutting-edge microbial formulations that promote sustainable agriculture while boosting crop productivity
+          Craft premium biodegradable leaf products using traditional techniques combined with modern quality standards
         </div>
       ) : (
         <div className="text-lg leading-tight font-semibold font-inter">
-          Innovate with Impact
+          Craft with Care
         </div>
       )}
     </div>
@@ -83,11 +83,11 @@ export const About = () => {
   >
     {hoveredCircle === 'center' ? (
       <div className="text-sm leading-tight font-normal font-inter" style={{fontWeight: '600'}}>
-        Provide agronomic guidance and tailored bio-solutions that deliver measurable on-field results
+        Provide eco-friendly dining solutions that enhance every meal while protecting our environment for future generations
       </div>
     ) : (
       <div className="text-lg leading-tight font-semibold font-inter">
-        Empower Farmers
+        Sustain the Future
       </div>
     )}
   </div>
@@ -102,11 +102,11 @@ export const About = () => {
     <div className={`w-56 h-56 md:w-67 md:h-67 rounded-full border border-gray-300 flex items-center justify-center text-center p-6 transition-all duration-500 ease-in-out ${hoveredCircle === 'right' ? 'text-white border-[#5ab334] transform scale-110' : ' text-gray-700'}`} style={hoveredCircle === 'right' ? {backgroundColor: '#5ab33480'} : {}}>
       {hoveredCircle === 'right' ? (
         <div className="text-sm leading-tight font-normal font-inter" style={{fontWeight: '600'}}>
-          Forge strategic partnerships with Innovators, Companies and Distributors worldwide to cater to the growing agri-biological sector
+          Partner with restaurants, events, and eco-conscious consumers worldwide to make sustainable dining accessible to everyone
         </div>
       ) : (
         <div className="text-lg leading-tight font-semibold font-inter">
-          Distribute Globally
+          Share Globally
         </div>
       )}
     </div>

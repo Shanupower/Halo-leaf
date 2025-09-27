@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import { About } from "./about";
 import { BestSell } from "./bestSell";
-import { Categories } from "./categories";
 import { Hero } from "./hero";
 import { Testimonials } from "./testimonials";
 import ContactForm from "./contact";
@@ -12,10 +11,9 @@ export const Home = () => {
   return (
     <div className="">
       <Hero />
-      <Categories />
       <BestSell />
       <About />
- 
+      <Testimonials />
       <ContactForm />
     </div>
   );

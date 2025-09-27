@@ -1,16 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
 
 const categories = [
-  "BIO-FERTILIZERS",
-  "BIO-FUNGICIDES",
-  "BIO-INSECTICIDES",
-  "BIO-NEMATICIDES",
-  "BIO-STIMULANTS",
-  "MICRONUTRIENTS",
-  "PROBIOTICS",
-  "SOIL CONDITIONERS",
-  "SPECIALTY PRODUCTS",
-  "RESEARCH & DEVELOPMENT",
+  "LEAF PLATES",
+  "LEAF BOWLS",
+  "LEAF CUPS",
+  "LEAF TRAYS",
+  "LEAF CONTAINERS",
+  "LEAF UTENSILS",
+  "LEAF PACKAGING",
+  "LEAF DECORATIONS",
+  "CUSTOM DESIGNS",
+  "ECO-FRIENDLY SOLUTIONS",
 ];
 
 export const Hero = () => {
@@ -48,7 +48,7 @@ export const Hero = () => {
       {/* Hero content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center text-white pt-28">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-shadow">
-        Sustainability: In the Palm of your Hands
+        Sustainable Dining: Nature's Perfect Solution
         </h1>
         
         {/* Static + Animated Part */}

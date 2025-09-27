@@ -3,67 +3,41 @@ import axios from "axios";
 import { ShopCard } from "./shop-card";
 import { Pagination } from "./Pagination";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const Shop = () => {
-  const [categories, setCategories] = useState([]);
   const [activeCategoryName, setActiveCategoryName] = useState("All Products");
-  const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  const { category, product } = useSelector((state) => state.leaf);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await axios.get("http://97.74.93.91:1330/api/categories");
-        const fetched = res.data.data || [];
-        setCategories(fetched);
-
-        if (categoryId) {
-          const selectedCategory = fetched.find(
-            (cat) => cat.documentId === categoryId
-          );
-          if (selectedCategory) {
-            setActiveCategoryName(selectedCategory.Name);
-          } else {
-            setActiveCategoryName("Unknown Category");
-          }
-        } else {
-          setActiveCategoryName("All Products");
-        }
-      } catch (err) {
-        console.error("Failed to fetch categories", err);
+    if (categoryId) {
+      const selectedCategory = category?.find(
+        (cat) => cat.id === categoryId
+      );
+      if (selectedCategory) {
+        setActiveCategoryName(selectedCategory.attributes?.Name || "Unknown Category");
+      } else {
+        setActiveCategoryName("Unknown Category");
       }
-    };
+    } else {
+      setActiveCategoryName("All Products");
+    }
+  }, [categoryId, category]);
 
-    fetchCategories();
-  }, [categoryId]);
+  const filteredProducts = categoryId 
+    ? product?.filter(item => item.attributes?.category?.data?.id === parseInt(categoryId))
+    : product;
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        let url = "http://97.74.93.91:1330/api/products?populate=*";
-        if (categoryId) {
-          url += `&filters[category][documentId][$eq]=${categoryId}`;
-        }
-
-        const res = await axios.get(url);
-        setProducts(res.data.data || []);
-      } catch (err) {
-        console.error("Failed to fetch products", err);
-      }
-    };
-
-    fetchProducts();
-  }, [categoryId]);
-
-  const totalPages = Math.ceil(products.length / productsPerPage);
-  const displayedProducts = products.slice(
+  const totalPages = Math.ceil((filteredProducts?.length || 0) / productsPerPage);
+  const displayedProducts = filteredProducts?.slice(
     (currentPage - 1) * productsPerPage,
     currentPage * productsPerPage
-  );
+  ) || [];
 
   const handleCategoryClick = (id, name) => {
     setCurrentPage(1);
@@ -93,21 +67,21 @@ export const Shop = () => {
           All Products
         </button>
 
-        {categories.map((category) => {
-          const isActive = category.documentId === categoryId;
+        {category?.map((cat) => {
+          const isActive = cat.id === categoryId;
           return (
             <button
-              key={category.documentId}
+              key={cat.id}
               className={`px-4 py-2 text-sm rounded-full border transition-all duration-200 ${
                 isActive
                   ? "bg-black text-white"
                   : "text-gray-700 border-gray-300 hover:border-black"
               }`}
               onClick={() =>
-                handleCategoryClick(category.documentId, category.Name)
+                handleCategoryClick(cat.id, cat.attributes?.Name)
               }
             >
-              {category.Name}
+              {cat.attributes?.Name}
             </button>
           );
         })}
@@ -121,7 +95,7 @@ export const Shop = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
           {displayedProducts.map((item, index) => (
-            <ShopCard key={index} id={index} item={item} />
+            <ShopCard key={item.id || index} id={item.id || index} item={item} />
           ))}
         </div>
       )}

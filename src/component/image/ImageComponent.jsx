@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
 
-const ImageComponent = ({ src, alt, imgCss, cardCss, variant }) => {
+const ImageComponent = ({ src, alt, imgCss, cardCss, variant, onError }) => {
   const [loading, setLoading] = useState(true);
 
   return (
@@ -26,6 +26,12 @@ const ImageComponent = ({ src, alt, imgCss, cardCss, variant }) => {
           transition-opacity duration-500 
           ${loading ? "opacity-0" : "opacity-100"}`}
         onLoad={() => setLoading(false)}
+        onError={(e) => {
+          setLoading(false);
+          if (onError) {
+            onError(e);
+          }
+        }}
         loading="lazy"
       />
     </div>

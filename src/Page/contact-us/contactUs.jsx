@@ -1,104 +1,128 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Img1 from "../../assets/contact1.png";
+import Img2 from "../../assets/contact2.png";
+import Img3 from "../../assets/contact3.png";
 import { FAQ } from "../../component";
 
 export const ContactUs = () => {
+  const images = [Img1, Img2, Img3];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Change image every 3 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(intervalId);
+  }, [images.length]);
+
+  // Transition variants for slideshow
+  const transitionVariants = {
+    initial: { opacity: 0, scale: 0.9 },
+    animate: { opacity: 1, scale: 0.95, transition: { duration: 1, ease: "easeInOut" } },
+    exit: { opacity: 0, scale: 0.9, transition: { duration: 1, ease: "easeInOut" } },
+  };
   // Offices grouped as required
   const corporateAndManufacturing = [
     {
-      name: "Corporate Communication",
-      phone: "+91-40-24074427 | +91-8285684222",
-      email: "customercare@varshabioscience.com",
+      name: "HaloLeaf Head Office",
+      phone: "+91-8919123748",
+      email: "info@haloleaf.com",
       address:
-        "#17-1-383/36/2, 2nd Main Road, Vinay Nagar Colony, Saidabad, Hyderabad, Telangana – 500059, INDIA",
+        "5, 5-400/733, Prashanth Nagar, Vanasthalipuram, Hyderabad, Telangana 500070, INDIA",
       mapSrc:
-        "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d60932.077490700176!2d78.511217!3d17.351466!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9865a56b1b8d%3A0x3a15ede53360f7e6!2sVarsha%20Bioscience%20And%20Technology%20India%20Private%20Limited!5e0!3m2!1sen!2sin!4v1754910338197!5m2!1sen!2sin",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.5785097939047!2d78.56447399999999!3d17.335874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcba3075e06d0bb%3A0xfd5a4edefede821!2sDasari%E2%80%99s%20Nilayam!5e0!3m2!1sen!2sin!4v1751183513381!5m2!1sen!2sin",
     },
     {
-      name: "Manufacturing Unit",
+      name: "HaloLeaf Branch Office",
+      phone: "+91-8919123748",
+      email: "branch@haloleaf.com",
       address:
-        "Survey no: 253/A, Anthammagudem village, Pochampally mandal, Nalgonda dist, Telangana-508284, INDIA",
+        "H. no: 5, Ashirvad Nilayam, 2-175/ 24&25, Road No.4, Gandhi Nagar South Colony, Vanasthalipuram, Hyderabad, Telangana 500070, INDIA",
       mapSrc:
-        "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d121910.5621503968!2d78.843796!3d17.281498!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb120b884df3f9%3A0x48891029712b00b2!2sVarsha%20Bioscience%20And%20Technology%20India%20Pvt.Ltd.!5e0!3m2!1sen!2sin!4v1754910368889!5m2!1sen!2sin",
+        "https://www.google.com/maps?q=H.+no:+5,+Halo+Leaf+Plates,+Ashirvad+Nilayam,+2-175%2F24%2625,+Road+No.4,+Gandhi+Nagar+South+Colony,+Vanasthalipuram,+Hyderabad,+Telangana+500070&output=embed",
     },
   ];
 
   const bottomOffices = [
     {
-      name: "International Tie-ups",
-      phone: "+91-8285684222",
-      email: "sales@varshabioscience.com",
+      name: "International Sales",
+      phone: "+91-8919123748",
+      email: "international@haloleaf.com",
       address: "Hyderabad, Telangana, INDIA",
     },
     {
-      name: "B2B Tie-ups",
-      phone: "+91-9849438410",
-      email: "b2b@varshabioscience.com",
+      name: "B2B Partnerships",
+      phone: "+91-8919123748",
+      email: "partnerships@haloleaf.com",
       address: "Hyderabad, Telangana, INDIA",
     },
     {
-      name: "Procurements",
-      phone: "+91-9345647270",
-      email: "procurements@varshabioscience.com",
+      name: "Supply Chain",
+      phone: "+91-8919123748",
+      email: "supply@haloleaf.com",
       address: "Hyderabad, Telangana, INDIA",
     },
   ];
 
  const faqs = [
     {
-      question: "What are biofertilizers and how do they work?",
+      question: "What are Halo Leaf Siali Leaf Plates?",
       answer:
-        "Biofertilizers are living microbial formulations— that ensure continues plant nutriton through their enzymatic reactions that solubulize,mobilize and fix essential nutrients like Nitrogen , Phosphurus , Pottasium , zinc , Ferrous and many more.",
-    },
-        {
-      question: "How do your bio-insecticides differ from conventional pesticides?",
-      answer:
-        "Varsha’s bio-insecticides leverage naturally occurring bacteria (e.g., Bacillus thuringiensis) to target specific pests, disrupting their life cycles without harming beneficial insects, soil fauna, or water bodies. Unlike broad-spectrum chemicals, our biocontrol agents leave zero toxic residue and integrate seamlessly into IPM and organic farming programs.",
+        "Halo Leaf Siali leaf plates are eco-friendly, 100% natural dining solutions crafted from Siali leaves. They offer a biodegradable and chemical-free alternative to traditional plastic or paper tableware, ensuring a safe and sustainable dining experience.",
     },
     {
-      question: "Are Varsha Bioscience products safe for humans, animals, and the environment?",
+      question: "How are these leaf plates made?",
       answer:
-        "Absolutely. All our bio-inputs are derived from non-pathogenic, eco-certified microbes and botanical extracts. They carry no harmful residues, pose minimal risk to non-target organisms, and comply with stringent regulatory standards (FCO, CIB&RC, Ecocert, ISO).",
+        "Our plates are made using traditional methods passed down through generations. Artisans carefully collect Siali leaves from forests, then clean, dry, and stitch them together with natural fibers such as bamboo or sal bark. This meticulous process not only creates a durable product but also honors ancient craftsmanship.",
     },
     {
-      question: "How should I apply your bio-solutions for best results?",
+      question: "What benefits do Siali leaf plates offer?",
       answer:
-        "Each product category includes detailed application guidelines:\n\n• Timing: Apply at early growth stages or upon initial pest/disease detection.\n• Dosage: Follow label-recommended rates (e.g., spores per hectare or ml per liter of spray).\n• Method: Use seed treatment, soil drench, or foliar spray as specified.\nFor tailored advice, consult our agronomy experts via the “Ask an Expert” chat or contact form.",
+        "The plates provide multiple benefits: Eco-Friendly & Biodegradable, Chemical-Free & Non-Toxic, and Naturally Antibacterial, which helps maintain food hygiene while enhancing taste and aroma.",
     },
     {
-      question: "Can I mix Varsha products with chemical fertilizers or other bio-inputs?",
+      question: "How does Halo Leaf promote sustainability?",
       answer:
-        "Yes—most of our products are compatible with standard fertilizers, micronutrients, and bio-stimulators. However, avoid tank-mixing with harsh fungicides or disinfectants. Always perform a small-scale compatibility test before bulk application, or reach out to our technical support for a customized compatibility chart.",
+        "By offering a zero-waste, renewable alternative to disposable tableware, Halo Leaf helps reduce plastic waste and its environmental impact. Each plate is designed to leave no lasting footprint on the planet, aligning with eco-conscious and sustainable living practices.",
     },
     {
-      question: "What are the storage and shelf-life requirements?",
+      question: "Who crafts these plates?",
       answer:
-        "To preserve microbial viability:\n\n• Store in a cool, dry place (10–30 °C), away from direct sunlight.\n• Keep packaging sealed until use.\n• Use within the printed shelf-life (typically 12–24 months).\nAvoid freezing or extreme heat, which can reduce product efficacy.",
+        "Our plates are handcrafted by skilled artisans from indigenous and rural communities. These craftspeople, many of whom are women, bring traditional expertise and dedication to every piece, transforming natural Siali leaves into functional, eco-friendly tableware.",
     },
     {
-      question: "Do you offer custom or bulk formulations?",
+      question: "How does Halo Leaf support local communities?",
       answer:
-        "Yes. In addition to our nine standard product lines, we provide custom-blended solutions—such as tailored microbial consortia or pond bioremediation kits—based on soil tests, regional conditions, and crop requirements. Contact our sales team to discuss bulk orders, private-labeling, or R&D collaborations.",
+        "Halo Leaf is committed to uplifting rural communities by providing steady employment and fair wages to its artisans. This not only sustains an age-old craft but also empowers women and supports local economies, creating a positive social impact alongside environmental benefits.",
     },
     {
-      question: "How do I track my order or request technical support?",
+      question: "What makes dining on Siali leaf plates a healthier choice?",
       answer:
-        "After placing an order, you’ll receive a tracking link via email or SMS. For technical queries, application guidance, or troubleshooting, use our online support portal or call our agronomy hotline. We aim to respond within 24 hours to ensure your operations remain uninterrupted.",
-    },
-    {
-      question: "Where can I purchase Varsha Bioscience products?",
-      answer:
-        "Our products are available through:\n\n• Authorized distributors and agri-input dealers nationwide\n• Direct sales from our Hyderabad and Chennai offices\n• Online via our e-commerce portal (launching soon!)\nUse the “Find a Distributor” tool on our website or contact us for the nearest reseller.",
-    },
-    {
-      question: "How can I stay updated on new launches and research insights?",
-      answer:
-        "Subscribe to our quarterly newsletter for the latest product innovations, field success stories, and agronomy tips. You can also follow us on LinkedIn, Facebook, and YouTube for webinars, case studies, and live Q&A sessions with our R&D team.",
+        "Eating on Siali leaf plates is beneficial because they are free from harmful chemicals and are naturally antibacterial. This ensures that your food retains its natural taste and aroma, offering a clean and health-conscious alternative to conventional tableware.",
     },
   ];;
 
   return (
     <div style={{ marginTop: "80px", marginBottom: "40px" }} className="md:px-[10%] sm:px-[5%] px-2 py-4">
       <h2 className="md:text-2xl text-xl font-semibold mb-6">CONTACT US</h2>
+
+      {/* Image Slideshow */}
+      <div className="rounded-xl overflow-hidden mt-4 relative md:h-[60vh] h-[40vh]">
+        <AnimatePresence exitBeforeEnter>
+          <motion.img
+            key={currentIndex}
+            src={images[currentIndex]}
+            alt={`Slide ${currentIndex}`}
+            className="absolute top-0 left-0 -z-10 object-contain h-full w-full"
+            variants={transitionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          />
+        </AnimatePresence>
+      </div>
 
       {/* Corporate & Manufacturing in one row */}
       <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-6 mb-8">

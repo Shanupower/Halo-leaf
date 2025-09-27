@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+const baseURL = "http://13.201.41.1:1337/api";
 
 const axiosInstance = axios.create({
   baseURL,
@@ -10,7 +10,9 @@ const axiosInstance = axios.create({
 });
 
 export const get = async (url, config) => {
+  console.log(`🌐 Making GET request to: ${baseURL}${url}`);
   const response = await axiosInstance.get(url, config || null);
+  console.log(`📡 Response received for ${url}:`, response.data);
   return response.data;
 };
 
