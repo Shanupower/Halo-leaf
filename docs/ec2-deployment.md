@@ -116,19 +116,54 @@ Set at minimum:
 
 Leave **Shiprocket** blank for now. Add after warehouse + products exist.
 
-## 3. Deploy
+## 3. Deploy (batched — recommended on shared EC2)
+
+Run **one batch at a time** so errors are easy to spot and memory spikes are smaller:
 
 ```bash
-./deploy/ec2/deploy.sh
-./deploy/ec2/post-deploy.sh
+cd ~/Halo-leaf-medusa   # or your clone path
+git pull origin main
+sed -i 's/\r$//' deploy/ec2/*.sh   # if cloned on Windows before
+
+bash deploy/ec2/init-env.sh 65.2.154.229   # once, if .env missing
+
+bash deploy/ec2/batch-01-frontend.sh       # ~1 min — Vite build only
+bash deploy/ec2/batch-02-backend-image.sh   # ~10–20 min — Docker image only (heaviest)
+bash deploy/ec2/batch-03-start-stack.sh    # ~30 sec — start containers
+bash deploy/ec2/batch-04-health.sh         # wait for /health
+bash deploy/ec2/batch-05-migrate.sh        # DB migrations
+bash deploy/ec2/batch-06-admin.sh          # admin user instructions
 ```
+
+Or all at once: `bash deploy/ec2/deploy-all-batches.sh`
+
+| Batch | Script | Load on server |
+|-------|--------|----------------|
+| 1 | `batch-01-frontend.sh` | Low |
+| 2 | `batch-02-backend-image.sh` | **High** (one `npm ci` + Medusa build) |
+| 3 | `batch-03-start-stack.sh` | Low |
+| 4 | `batch-04-health.sh` | Minimal |
+| 5 | `batch-05-migrate.sh` | Low |
+| 6 | `batch-06-admin.sh` | Minimal |
+
+**Tip:** Add 2 GB swap before batch 2. Optionally `pm2 stop all` during batch 2 only.
+
+### All-in-one (legacy)
+
+```bash
+bash deploy/ec2/deploy-sudo.sh
+```
+
+This runs the same batches sequentially.
 
 Create admin user when prompted:
 
 ```bash
-docker compose -f docker-compose.prod.yml exec backend npx medusa user \
+sudo docker compose -f docker-compose.prod.yml --env-file deploy/ec2/.env exec backend npx medusa user \
   -e admin@haloleaf.com -p 'YourSecurePassword'
 ```
+
+Or use `bash deploy/ec2/batch-06-admin.sh` for the command template.
 
 ## 4. HTTPS (optional)
 

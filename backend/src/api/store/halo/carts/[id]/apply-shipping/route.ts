@@ -186,7 +186,7 @@ async function applyShippingHandler(req: MedusaRequest, res: MedusaResponse) {
       provider,
       option_id: selected.id,
       option_name: selected.name,
-      amount_minor: updatedCart?.shipping_total ?? shippingAmountMinor,
+      amount_minor: updatedCart?.shipping_total ?? shippingAmount,
       estimated_delivery_days: estimatedDays,
     },
   })
