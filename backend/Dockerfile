@@ -9,7 +9,9 @@ FROM deps AS builder
 WORKDIR /app
 COPY . .
 RUN npm run build \
-  && npx swc medusa-config.ts -o medusa-config.js -C module.type=commonjs \
+  && ./node_modules/.bin/tsc medusa-config.ts --outDir . --rootDir . \
+       --module commonjs --moduleResolution node --esModuleInterop \
+       --skipLibCheck --target ES2021 --declaration false \
   && npm prune --omit=dev
 
 FROM node:20-alpine AS runner
