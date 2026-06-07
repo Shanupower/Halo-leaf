@@ -8,8 +8,9 @@ RUN npm ci || npm install
 FROM deps AS builder
 WORKDIR /app
 COPY . .
-RUN npm run build && npm prune --omit=dev \
-  && cp .medusa/server/medusa-config.js ./medusa-config.js
+RUN npm run build \
+  && npx swc medusa-config.ts -o medusa-config.js -C module.type=commonjs \
+  && npm prune --omit=dev
 
 FROM node:20-alpine AS runner
 WORKDIR /app
