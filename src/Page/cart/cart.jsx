@@ -1,61 +1,71 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { CartCard } from "./cart-card";
+import { PATHS } from "../../routes/paths";
 import { Link } from "react-router-dom";
+import { syncCartFromMedusa } from "../../feature/leafSlice";
+import { OrderSummary } from "../../component/OrderSummary";
 
 export const Cart = () => {
-  const { cart } = useSelector((state) => state.leaf);
+  const dispatch = useDispatch();
+  const { cart, cartSummary, cartSyncing } = useSelector((state) => state.leaf);
 
-  // Calculate total price
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.OrigialPrice * (item.quantity || 1),
-    0
-  );
+  useEffect(() => {
+    dispatch(syncCartFromMedusa());
+  }, [dispatch]);
 
-  console.log(cart);
+  const itemCount =
+    cartSummary?.itemCount ??
+    cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
   return (
-    <div className="md:px-[10%] sm:px-[5%] px-4 py-6">
-      <h2 className="text-3xl font-bold mb-6">Your Shopping Cart</h2>
+    <div className="px-4 py-10 sm:px-[5%] md:px-[8%]">
+      <section className="mb-8 rounded-[2rem] bg-[#f7fbf4] px-6 py-10 text-center">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-green-700">
+          Cart
+        </p>
+        <h1 className="text-3xl font-bold text-gray-950 md:text-5xl">
+          Your Shopping Cart
+        </h1>
+      </section>
 
       {cart.length === 0 ? (
-        <div className="text-center text-xl min-h-[30vh] flex justify-center items-center font-bold text-gray-500">
-          Your Cart is Empty
+        <div className="flex min-h-[30vh] items-center justify-center rounded-[2rem] border border-green-100 bg-white p-8 text-center text-xl font-bold text-gray-500">
+          Your cart is empty
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 space-y-4">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+          <div className="space-y-4">
             {cart.map((item, index) => (
               <CartCard key={item.id || index} item={item} />
             ))}
           </div>
 
-          {/* Cart Summary */}
-          <div className="bg-white shadow-lg p-6 rounded-lg border border-gray-200">
-            <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
-            <div className="flex justify-between text-gray-700 mb-2">
-              <span>Items:</span>
-              <span>{cart.length}</span>
-            </div>
-            <div className="flex justify-between font-bold text-lg mb-6">
-              <span>Total:</span>
-              <span>₹{totalPrice.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-center">
-              <Link
-                to="/order"
-                className="w-full text-center bg-green-600 hover:bg-green-700 text-white p-2  m-auto rounded-lg transition cursor-pointer"
-              >
-                Proceed to Checkout
-              </Link>
-            </div>
+          <aside className="h-fit rounded-[1.5rem] border border-green-100 bg-white p-6 shadow-sm lg:sticky lg:top-28">
+            <h3 className="mb-5 text-xl font-bold text-gray-950">Order Summary</h3>
+            {cartSyncing && (
+              <p className="mb-3 text-sm text-gray-500">Updating cart...</p>
+            )}
+            <OrderSummary
+              summary={cartSummary}
+              itemCount={itemCount}
+              showShippingPending
+              className="mb-6"
+            />
+            <Link
+              to="/order"
+              className="block w-full rounded-full bg-green-700 p-3 text-center font-semibold text-white transition hover:bg-gray-950"
+            >
+              Proceed to Checkout
+            </Link>
 
             <Link
-              to="/shop"
-              className="block text-center mt-4 text-blue-600 hover:underline"
+              to={PATHS.products}
+              className="mt-4 block text-center text-sm font-semibold text-green-800 hover:underline"
             >
               Continue Shopping
             </Link>
-          </div>
+          </aside>
         </div>
       )}
     </div>

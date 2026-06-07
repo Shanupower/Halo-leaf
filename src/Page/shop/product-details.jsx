@@ -1,45 +1,66 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../feature/leafSlice";
+import { addToCart, fetchProductById } from "../../feature/leafSlice";
+import { toast } from "react-toastify";
+import {
+  checkServiceability as checkDeliveryServiceability,
+} from "../../api/medusa/store";
 import ProductImageSlider from "./ProductImageSlider";
 import { ShopCard } from "./shop-card";
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import EventIcon from "@mui/icons-material/Event";
+import { buildImageUrl } from "../../utils/media";
 
 
 export const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { product } = useSelector((state) => state.leaf);
-  const productDetails = product?.find((item) => item?.documentId === id);
+  const productDetails = product?.find(
+    (item) => item?.documentId === id || item?.id === id
+  );
 
-  const [mainImage, setMainImage] = useState("");
   const [deliveryPincode, setDeliveryPincode] = useState("");
   const [serviceResponse, setServiceResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Accordion toggles
-  const [showDescription, setShowDescription] = useState(false);
-  const [showShipping, setShowShipping] = useState(false);
-// const [expanded, setExpanded] = useState(true);
   useEffect(() => {
     window.scrollTo(0, 0);
-    setMainImage(productDetails?.image?.[0]?.url);
-  }, [productDetails]);
+  }, [id]);
 
-  const handleAddToCart = () => {
-    dispatch(addToCart({ ...productDetails, quantity: 1 }));
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchProductById(id));
+    }
+  }, [id, dispatch]);
+
+  const handleAddToCart = (afterAdd) => {
+    if (!productDetails?.variant_id && !productDetails?.variants?.[0]?.id) {
+      toast.error("This product cannot be added to the cart yet.");
+      return;
+    }
+    dispatch(addToCart({ item: productDetails, quantity: 1 }))
+      .unwrap()
+      .then(() => {
+        toast.success("Added to cart");
+        if (afterAdd) afterAdd();
+      })
+      .catch((e) => toast.error(typeof e === "string" ? e : "Could not add to cart"));
+  };
+
+  const handleBuyNow = () => {
+    handleAddToCart(() => navigate("/order"));
   };
 
   const checkServiceability = async () => {
@@ -49,27 +70,16 @@ export const ProductDetails = () => {
     setError("");
     setServiceResponse(null);
 
-    try {
-      const response = await fetch(
-        "https://api.rapidshyp.com/rapidshyp/apis/v1/serviceabilty_check",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "rapidshyp-token":
-              "8e3ca34d7ad8ac6598c3110cd8e3be08b8efe0b4ed0f28e71b3706e1f5dabcaf",
-          },
-          body: JSON.stringify({
-            Pickup_pincode: "226202",
-            Delivery_pincode: deliveryPincode,
-            cod: true,
-            total_order_value: 2000,
-            weight: 1,
-          }),
-        }
-      );
+    const variantId =
+      productDetails?.variant_id || productDetails?.variants?.[0]?.id;
 
-      const data = await response.json();
+    try {
+      const data = await checkDeliveryServiceability({
+        delivery_pincode: deliveryPincode,
+        ...(variantId ? { variant_id: variantId, quantity: 1 } : {}),
+        cod: false,
+        total_order_value: Math.round(Number(productDetails?.price || 0) * 100),
+      });
       setServiceResponse(data);
     } catch (err) {
       console.error(err);
@@ -79,58 +89,107 @@ export const ProductDetails = () => {
     }
   };
 
+  const galleryImages =
+    productDetails?.image?.length > 0
+      ? productDetails.image
+          .map((img) => buildImageUrl(img.url || img.full))
+          .filter(Boolean)
+      : productDetails?.imageUrl
+        ? [productDetails.imageUrl]
+        : productDetails?.thumbnail
+          ? [buildImageUrl(productDetails.thumbnail)]
+          : [];
+
+  const productDescription =
+    productDetails?.description ||
+    productDetails?.shortDescription ||
+    productDetails?.subtitle ||
+    "";
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-30">
-      {/* Top Section */}
-      <div className="grid md:grid-cols-2 gap-10">
+    <div className="mx-auto max-w-7xl px-4 py-10 md:py-14">
+      {!productDetails && (
+        <p className="py-20 text-center text-gray-500">Loading product...</p>
+      )}
+      {productDetails && (
+      <>
+      <div className="grid gap-10 rounded-[2rem] bg-white md:grid-cols-2">
         {/* Images */}
-        <ProductImageSlider
-          images={
-            productDetails?.image?.map(
-              (img) => `${import.meta.env.VITE_Image_BASE_URL}${img.url}`
-            ) || []
-          }
-        />
+        <ProductImageSlider images={galleryImages} />
 
         {/* Product Info */}
-        <div className="space-y-2 pr-20">
-          <p className="text-sm text-gray-500">Main Fashion</p>
-          <h2 className="text-2xl font-bold">{productDetails?.title}</h2>
-          <p className="text-xl font-semibold text-black">
+        <div className="space-y-4 md:pr-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">
+            HaloLeaf product
+          </p>
+          <h1 className="text-3xl font-bold text-gray-950 md:text-5xl">
+            {productDetails?.title}
+          </h1>
+          {productDetails.reviewCount > 0 && (
+            <p className="text-sm text-gray-600">
+              {Number(productDetails.ratingAverage || 0).toFixed(1)} ★ ·{" "}
+              {productDetails.reviewCount} review
+              {productDetails.reviewCount === 1 ? "" : "s"}
+            </p>
+          )}
+          <p className="text-2xl font-bold text-green-800">
             ₹ {productDetails?.OrigialPrice || 0}
           </p>
 
-          <button
-            onClick={handleAddToCart}
-            className="bg-black text-white w-full py-3 rounded-full text-sm font-medium"
-          >
-            Add to Cart
-          </button>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <button
+              onClick={() => handleAddToCart()}
+              className="w-full rounded-full border border-green-700 bg-white py-3 text-sm font-semibold text-green-800 transition hover:bg-green-50"
+            >
+              Add to Cart
+            </button>
+            <button
+              onClick={handleBuyNow}
+              className="w-full rounded-full bg-green-700 py-3 text-sm font-semibold text-white transition hover:bg-gray-950"
+            >
+              Buy Now
+            </button>
+          </div>
 
           {/* Pincode Check */}
           <div className="pt-3">
-            <h4 className="font-semibold mb-2">Check Delivery Availability</h4>
+            <h4 className="mb-2 font-semibold">Check Delivery Availability</h4>
             <div className="flex gap-3">
               <input
                 type="text"
                 value={deliveryPincode}
                 onChange={(e) => setDeliveryPincode(e.target.value)}
                 placeholder="Enter Pincode"
-                className="border px-3 py-2 rounded w-full"
+                className="w-full rounded-full border border-green-100 px-4 py-3 outline-none focus:border-green-700"
               />
               <button
                 onClick={checkServiceability}
-                className="bg-gray-800 text-white px-4 py-2 rounded"
+                className="rounded-full bg-gray-950 px-5 py-3 text-white transition hover:bg-green-700"
               >
                 {loading ? "Checking..." : "Check"}
               </button>
             </div>
             {error && <p className="text-red-500 mt-2">{error}</p>}
             {serviceResponse && (
-              <p className="text-green-600 mt-2">
-                Delivery Available:{" "}
-                {serviceResponse.data?.delivery_available ? "Yes ✅" : "No ❌"}
-              </p>
+              <div className="mt-2 space-y-1 text-sm text-gray-700">
+                <p
+                  className={
+                    serviceResponse.delivery_available
+                      ? "text-green-700"
+                      : "text-red-600"
+                  }
+                >
+                  Delivery:{" "}
+                  {serviceResponse.delivery_available ? "Available" : "Not available"}
+                </p>
+                {serviceResponse.estimated_delivery_days != null && (
+                  <p>Estimated: {serviceResponse.estimated_delivery_days} day(s)</p>
+                )}
+                {serviceResponse.etd && <p>Expected by: {serviceResponse.etd}</p>}
+                {serviceResponse.rate != null && (
+                  <p>Shipping from ₹{Number(serviceResponse.rate).toFixed(0)}</p>
+                )}
+              </div>
             )}
           </div>
 
@@ -146,8 +205,8 @@ export const ProductDetails = () => {
             </AccordionSummary>
             <AccordionDetails>
               <p className="text-sm text-gray-600">
-                {productDetails?.description ||
-                  "Loose fit hoodie in medium-weight cotton-blend fleece with a generous, but not oversized silhouette. Jersey-lined drawstring hood, dropped shoulders, long sleeves, and a kangaroo pocket. Wide ribbing at cuffs and hem. Soft brushed inside."}
+                {productDescription ||
+                  "Product details will appear here once added in Medusa Admin."}
               </p>
             </AccordionDetails>
           </Accordion>
@@ -208,44 +267,52 @@ export const ProductDetails = () => {
           </div>   
       </div>
 
-      {/* Ratings */}
-      <div className="grid md:grid-cols-2 gap-10 mt-16">
-        <div className="text-center md:text-left">
-          <p className="text-5xl font-bold">
-            4.5<span className="text-2xl text-gray-500"> / 5</span>
+      <div className="mt-16 grid gap-8 rounded-[2rem] border border-green-100 bg-[#f7fbf4] p-6 md:grid-cols-2 md:p-8">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">
+            Customer reviews
           </p>
-          <p className="text-sm text-gray-400 mt-1">(50 New Reviews)</p>
-          <div className="mt-4 space-y-2 text-sm">
-            {[5, 4, 3, 2, 1].map((star) => (
-              <div key={star} className="flex items-center gap-2">
-                <span className="w-5">{star}★</span>
-                <div className="bg-gray-200 rounded h-2 flex-1">
-                  <div className="bg-black h-2 rounded w-[80%]"></div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {productDetails.reviewCount > 0 ? (
+            <>
+              <p className="mt-4 text-5xl font-bold text-gray-950">
+                {Number(productDetails.ratingAverage || 0).toFixed(1)}
+                <span className="text-2xl text-gray-500"> / 5</span>
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                Based on {productDetails.reviewCount} review
+                {productDetails.reviewCount === 1 ? "" : "s"}
+              </p>
+            </>
+          ) : (
+            <div className="mt-4 rounded-2xl border border-green-100 bg-white p-5 text-sm leading-6 text-gray-600">
+              No reviews yet. Be the first to share feedback after your order.
+            </div>
+          )}
         </div>
 
-        {/* Review */}
-        <div className="border rounded-xl p-4">
-          <div className="flex gap-4 items-start">
-            <img
-              src="https://randomuser.me/api/portraits/men/75.jpg"
-              alt="Alex"
-              className="w-12 h-12 rounded-full"
-            />
-            <div>
-              <div className="flex justify-between items-center">
-                <h4 className="font-semibold">Alex Mathio</h4>
-                <p className="text-sm text-gray-400">13 Oct 2024</p>
+        <div className="space-y-4">
+          {(productDetails.reviews || []).length > 0 ? (
+            productDetails.reviews.map((review) => (
+              <div key={review.id} className="rounded-2xl border border-green-100 bg-white p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-950">{review.name}</h4>
+                    <p className="text-sm text-green-700">{review.rating} ★</p>
+                  </div>
+                  {review.date && (
+                    <p className="text-xs text-gray-400">{review.date}</p>
+                  )}
+                </div>
+                <p className="mt-3 text-sm leading-6 text-gray-600">
+                  {review.comment}
+                </p>
               </div>
-              <p className="text-sm text-gray-600 mt-2">
-                “NextGen’s dedication to sustainability and ethical practices resonates strongly
-                with today’s consumers.”
-              </p>
+            ))
+          ) : (
+            <div className="rounded-2xl border border-green-100 bg-white p-5 text-sm leading-6 text-gray-600">
+              Customer reviews will appear here soon.
             </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -258,6 +325,8 @@ export const ProductDetails = () => {
           ))}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };

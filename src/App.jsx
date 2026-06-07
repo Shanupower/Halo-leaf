@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { RedirectToAbout } from "./routes/RedirectToAbout";
+import { LegacyProductRedirect } from "./routes/LegacyProductRedirect";
+import { LegacyCategoryRedirect } from "./routes/LegacyCategoryRedirect";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { AnimatePresence, motion } from "framer-motion";
@@ -24,6 +27,7 @@ import {
   OrderDetails,
   ProductDetails,
   Profile,
+  RazorpayCheckout,
   Review,
   Shop,
   SignIn,
@@ -33,6 +37,8 @@ import {
   UserOrder,
   WhyUs,
   Wishlist,
+  CheckoutSuccess,
+  CheckoutFailed,
 
 } from "./Page";
 
@@ -67,8 +73,9 @@ function App() {
   const logoRef = useRef();
 
   const fetchData = () => {
-    if (id && !user?.id) {
-      dispatch(fetchUserDetails(id));
+    const token = localStorage.getItem("access_token");
+    if (token && id && !user?.id) {
+      dispatch(fetchUserDetails());
     }
     // Products, categories, and testimonials are now loaded in the preloader
   };
@@ -102,13 +109,14 @@ function App() {
                   }
                 />
                 <Route
-                  path="why-us"
+                  path="process"
                   element={
                     <AnimatePage>
                       <WhyUs />
                     </AnimatePage>
                   }
                 />
+                <Route path="why-us" element={<Navigate to="/process" replace />} />
                 <Route
                   path="testimonials"
                   element={
@@ -118,7 +126,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="product"
+                  path="products"
                   element={
                     <AnimatePage>
                       <Shop />
@@ -126,7 +134,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/product/category/:categoryId"
+                  path="products/category/:categoryId"
                   element={
                     <AnimatePage>
                       <Shop />
@@ -134,12 +142,21 @@ function App() {
                   }
                 />
                 <Route
-                  path="/product/details/:id"
+                  path="products/:id"
                   element={
                     <AnimatePage>
                       <ProductDetails />
                     </AnimatePage>
                   }
+                />
+                <Route path="product" element={<Navigate to="/products" replace />} />
+                <Route
+                  path="product/category/:categoryId"
+                  element={<LegacyCategoryRedirect />}
+                />
+                <Route
+                  path="product/details/:id"
+                  element={<LegacyProductRedirect />}
                 />
                 <Route
                   path="cart"
@@ -190,6 +207,30 @@ function App() {
                   }
                 />
                 <Route
+                  path="checkout/success"
+                  element={
+                    <AnimatePage>
+                      <CheckoutSuccess />
+                    </AnimatePage>
+                  }
+                />
+                <Route
+                  path="checkout/failed"
+                  element={
+                    <AnimatePage>
+                      <CheckoutFailed />
+                    </AnimatePage>
+                  }
+                />
+                <Route
+                  path="checkout/razorpay"
+                  element={
+                    <AnimatePage>
+                      <RazorpayCheckout />
+                    </AnimatePage>
+                  }
+                />
+                <Route
                   path="address/:documentId"
                   element={
                     <AnimatePage>
@@ -197,14 +238,7 @@ function App() {
                     </AnimatePage>
                   }
                 />
-                <Route
-                  path="product/:id"
-                  element={
-                    <AnimatePage>
-                      <ProductDetails />
-                    </AnimatePage>
-                  }
-                />
+                <Route path="product/:id" element={<LegacyProductRedirect />} />
                 <Route
                   path="order-details/:id"
                   element={
@@ -214,13 +248,15 @@ function App() {
                   }
                 />
                 <Route
-                  path="contact-us"
+                  path="contact"
                   element={
                     <AnimatePage>
                       <ContactUs />
                     </AnimatePage>
                   }
                 />
+                <Route path="contact-us" element={<Navigate to="/contact" replace />} />
+                <Route path="about" element={<RedirectToAbout />} />
                 <Route
                   path="signup"
                   element={
@@ -277,7 +313,7 @@ function App() {
           </AnimatePresence>
 
           <ToastContainer
-            position="top-right"
+            position="bottom-center"
             autoClose={5000}
             hideProgressBar={false}
             newestOnTop={false}

@@ -11,6 +11,16 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
+!backend/.env.example
+!backend/.env.template
+!deploy/ec2/env.production.example
+
+deploy/ec2/.env
+deploy/ec2/nginx/certs/*.pem
+deploy/ec2/nginx/certs/*.key
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +33,12 @@ dist-ssr
 *.sln
 *.sw?
 .qodo
+
+# AWS CDK synth output
+infra/aws/cdk.out
+infra/aws/node_modules
+
+# Medusa local build artifacts
+backend/.medusa
+backend/node_modules
+backend/.env

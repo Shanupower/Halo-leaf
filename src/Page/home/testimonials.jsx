@@ -10,52 +10,43 @@ import ImageComponent from "../../component/image/ImageComponent";
 import { useSelector } from "react-redux";
 
 export const Testimonials = () => {
-  const { testimonials } = useSelector((state) => state.leaf);
-
-  // Fallback testimonials for when Strapi data is not available
-  const fallbackTestimonials = [
-    {
-      id: 1,
-      attributes: {
-        Name: 'Sarah Johnson',
-        designation: 'Restaurant Owner',
-        testimonial: "HaloLeaf's biodegradable plates are absolutely amazing! They're sturdy, beautiful, and completely eco-friendly. Perfect for our restaurant's sustainable dining initiative.",
-        rating: '5.0',
-        image: { data: { attributes: { url: '/placeholder.png' } } }
-      }
-    },
-    {
-      id: 2,
-      attributes: {
-        Name: 'Michael Chen',
-        designation: 'Event Planner',
-        testimonial: "We used HaloLeaf products for our corporate event and received countless compliments. The quality is outstanding and the environmental impact is exactly what we wanted.",
-        rating: '5.0',
-        image: { data: { attributes: { url: '/placeholder.png' } } }
-      }
-    },
-    {
-      id: 3,
-      attributes: {
-        Name: 'Emily Rodriguez',
-        designation: 'Catering Manager',
-        testimonial: "These leaf plates have revolutionized our catering business. They're elegant, functional, and our clients love knowing they're making an eco-friendly choice.",
-        rating: '5.0',
-        image: { data: { attributes: { url: '/placeholder.png' } } }
-      }
-    }
-  ];
-
-  // Use Strapi testimonials if available, otherwise use fallback
-  const testimonialsToShow = testimonials && testimonials.length > 0 ? testimonials : fallbackTestimonials;
+  const { testimonials, dataStatus } = useSelector((state) => state.leaf);
+  const testimonialStatus = dataStatus?.testimonials || {};
 
   return (
-    <div className="md:px-[10%] sm:px-[5%] px-2 py-4 md:mt-8 sm:mt-4 mb-20 ">
-      <div>
-        <h3 className="md:text-2xl text-xl md:text-left text-center font-semibold md:w-[26%]">
-          What customers say about HaloLeaf?
-        </h3>
+    <section className="px-4 py-12 sm:px-[5%] md:px-[8%] md:py-20">
+      <div className="mx-auto mb-10 max-w-3xl text-center">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-green-700">
+          Testimonials
+        </p>
+        <h2 className="text-3xl font-bold text-gray-950 md:text-5xl">
+          What customers say about HaloLeaf
+        </h2>
+        <p className="mt-4 text-base leading-7 text-gray-600">
+          Managed from Medusa store metadata through the storefront API.
+        </p>
       </div>
+
+      {testimonialStatus.loading && (
+        <div className="rounded-3xl border border-green-100 bg-green-50 p-8 text-center text-green-800">
+          Loading testimonials from Medusa...
+        </div>
+      )}
+
+      {!testimonialStatus.loading && testimonialStatus.error && (
+        <div className="rounded-3xl border border-red-100 bg-red-50 p-8 text-center text-red-700">
+          {testimonialStatus.error}
+        </div>
+      )}
+
+      {!testimonialStatus.loading && !testimonialStatus.error && testimonials.length === 0 && (
+        <div className="rounded-3xl border border-amber-100 bg-amber-50 p-8 text-center text-amber-800">
+          No testimonials found. Add a `testimonials` array to Medusa store
+          metadata to populate this section.
+        </div>
+      )}
+
+      {!testimonialStatus.loading && !testimonialStatus.error && testimonials.length > 0 && (
       <Swiper
         pagination={{
           dynamicBullets: true,
@@ -67,50 +58,48 @@ export const Testimonials = () => {
         modules={[Pagination, Navigation]}
         className="mt-10 cursor-grab"
       >
-        {testimonialsToShow?.map((testimonial, index) => {
-          const imageUrl = testimonial.attributes?.image?.data?.attributes?.url
-            ? `http://13.201.41.1:1337${testimonial.attributes.image.data.attributes.url}`
-            : Testimonial1;
+        {testimonials?.map((testimonial, index) => {
+          const imageUrl = testimonial.imageUrl || Testimonial1;
 
           return (
             <SwiperSlide
               key={testimonial.id || index}
-              className="bg-[var(--color-secondry)] opacity-90 rounded-xl md:p-10 sm:p-6 p-4 relative"
+              className="relative rounded-[2rem] border border-green-100 bg-white p-5 shadow-sm sm:p-6 md:p-10"
             >
-              <p className="text-gray-800">
-                {testimonial.attributes?.testimonial || 
-                 "HaloLeaf's biodegradable plates are absolutely amazing! They're sturdy, beautiful, and completely eco-friendly. Perfect for our restaurant's sustainable dining initiative."}
+              <p className="text-lg leading-8 text-gray-800">
+                {testimonial.testimonial || testimonial.attributes?.testimonial}
               </p>
-              <div className="flex justify-between items-center ">
+              <div className="mt-8 flex items-center justify-between gap-4">
                 <div className="relative flex items-center gap-1">
                   <ImageComponent
                     src={imageUrl}
-                    cardCss="md:w-[100px] w-[80px] mt-2 h-[20vh] "
+                    cardCss="h-20 w-20 overflow-hidden rounded-full border border-green-100 bg-green-50"
+                    imgCss="h-full w-full object-cover"
                     onError={(e) => {
-                      console.error(`Failed to load testimonial image ${index}:`, imageUrl);
                       e.target.src = Testimonial1;
                     }}
                   />
-                  <div className="absolute top-8 left-0">
+                  <div className="absolute -top-2 -left-2">
                     <ImageComponent src={Quote} imgCss=" size-6" />
                   </div>
                   <div>
                     <h3 className="text-[16px] font-bold ">
-                      {testimonial.attributes?.Name || 'Happy Customer'}
+                      {testimonial.name || testimonial.attributes?.Name || "Happy Customer"}
                     </h3>
                     <p className="text-sm  text-gray-600 ">
-                      {testimonial.attributes?.designation || 'Customer'}
+                      {testimonial.designation || testimonial.attributes?.designation || "Customer"}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <StarSharpIcon /> {testimonial.attributes?.rating || '5.0'}
+                <div className="flex shrink-0 items-center gap-1 text-green-800">
+                  <StarSharpIcon /> {testimonial.rating || testimonial.attributes?.rating || "5.0"}
                 </div>
               </div>
             </SwiperSlide>
           );
         })}
       </Swiper>
-    </div>
+      )}
+    </section>
   );
 };

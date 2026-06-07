@@ -1,6 +1,8 @@
 // src/components/Footer.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaFacebookF, FaLinkedinIn, FaInstagram, FaYoutube } from 'react-icons/fa';
+import { FOOTER_LINKS } from '../../../routes/paths';
 
 export const Footer = () => {
   return (
@@ -12,11 +14,17 @@ export const Footer = () => {
     <div>
       <h4 className="text-lg font-semibold text-black mb-4">Quick Links</h4>
       <ul className="space-y-2">
-        {['About', 'Products', 'Process', 'Contact'].map((link) => (
-          <li key={link}>
-            <a href={`/${link.toLowerCase()}`} className="hover:text-green-500">
-              {link}
-            </a>
+        {FOOTER_LINKS.map(({ label, to }) => (
+          <li key={label}>
+            {to.includes('#') ? (
+              <a href={to} className="hover:text-green-500">
+                {label}
+              </a>
+            ) : (
+              <Link to={to} className="hover:text-green-500">
+                {label}
+              </Link>
+            )}
           </li>
         ))}
       </ul>

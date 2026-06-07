@@ -5,6 +5,8 @@ import Lottie from 'lottie-react';
 import leafAnimation from '../../assets/Lotie/Leaf.json';
 import { fetchProductList, fetchCategorytList, fetchTestimonialsList } from '../../feature/leafSlice';
 
+const isDev = import.meta.env.DEV;
+
 export default function Preloader({ onFinish, logoRef }) {
   const dispatch = useDispatch();
   const loaderRef = useRef();
@@ -16,26 +18,28 @@ export default function Preloader({ onFinish, logoRef }) {
   const { product, category, testimonials, loading } = useSelector((state) => state.leaf);
 
   // Debug logging for Redux state
-  console.log("Preloader Redux state - product:", product);
-  console.log("Preloader Redux state - category:", category);
-  console.log("Preloader Redux state - testimonials:", testimonials);
-  console.log("Preloader Redux state - loading:", loading);
+  if (isDev) {
+    console.log("Preloader Redux state - product:", product);
+    console.log("Preloader Redux state - category:", category);
+    console.log("Preloader Redux state - testimonials:", testimonials);
+    console.log("Preloader Redux state - loading:", loading);
+  }
 
   // Load all APIs when preloader starts
   useEffect(() => {
     const loadAllAPIs = async () => {
       try {
-        console.log("Preloader: Starting to load all APIs...");
+        if (isDev) console.log("Preloader: Starting to load all APIs...");
         // Dispatch all API calls
         await Promise.all([
           dispatch(fetchProductList()),
           dispatch(fetchCategorytList()),
           dispatch(fetchTestimonialsList())
         ]);
-        console.log("Preloader: All APIs loaded successfully");
+        if (isDev) console.log("Preloader: All APIs loaded successfully");
         setApisLoaded(true);
       } catch (error) {
-        console.error('Preloader: Error loading APIs:', error);
+        if (isDev) console.error('Preloader: Error loading APIs:', error);
         setApisLoaded(true); // Still continue even if APIs fail
       }
     };
@@ -46,7 +50,7 @@ export default function Preloader({ onFinish, logoRef }) {
   // Ensure animation plays for minimum duration (3 seconds)
   useEffect(() => {
     const animationTimer = setTimeout(() => {
-      console.log("Preloader: Animation minimum duration completed");
+      if (isDev) console.log("Preloader: Animation minimum duration completed");
       setAnimationPlayed(true);
     }, 3000); // 3 seconds minimum
 
@@ -66,7 +70,7 @@ export default function Preloader({ onFinish, logoRef }) {
       // Only finish when progress is 100%, APIs are loaded, AND animation has played for minimum duration
       if (percent >= 100 && apisLoaded && animationPlayed && !hasAnimatedRef.current) {
         hasAnimatedRef.current = true;
-        console.log("Preloader: All conditions met, starting exit animation");
+        if (isDev) console.log("Preloader: All conditions met, starting exit animation");
 
         const tl = gsap.timeline({
           onComplete: onFinish,

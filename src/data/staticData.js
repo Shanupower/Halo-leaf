@@ -1,8 +1,10 @@
+import { PATHS } from "../routes/paths";
+
 export const HeaderData = [
-  { id: 1, title: "Home", link: "/" },
-  { id: 3, title: "Our Process", link: "/why-us" },
-  { id: 4, title: "Our Products", link: "/product" },
-  { id: 9, title: "Contact Us", link: "/contact-us" },
+  { id: 1, title: "Home", link: PATHS.home },
+  { id: 3, title: "Our Process", link: PATHS.process },
+  { id: 4, title: "Our Products", link: PATHS.products },
+  { id: 9, title: "Contact Us", link: PATHS.contact },
 ];
 import Img1 from "../assets/product 1/1.png";
 import Img2 from "../assets/product 1/2.png";

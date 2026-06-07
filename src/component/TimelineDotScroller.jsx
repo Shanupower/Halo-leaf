@@ -28,15 +28,11 @@ export const TimelineDotScroller = ({ containerRef, items }) => {
     setPositions(markerPositions);
   }, [containerRef, items]);
 
-  // Only create transform if we have valid positions
-  const dotY = positions.length > 0 
-    ? useTransform(
-        scrollY, 
-        positions, // input: scroll positions where transitions happen
-        positions.map(p => p - containerTop), // output: relative positions within container
-        { clamp: false }
-      )
-    : useTransform(scrollY, [0], [0]); // fallback transform
+  const input = positions.length > 0 ? positions : [0];
+  const output = positions.length > 0 ? positions.map((p) => p - containerTop) : [0];
+
+  // Hooks must be called unconditionally (even if we render null).
+  const dotY = useTransform(scrollY, input, output, { clamp: false });
 
   // Don't render if no positions yet
   if (positions.length === 0) {

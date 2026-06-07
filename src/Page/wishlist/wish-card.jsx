@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ImageComponent from "../../component/image/ImageComponent";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { productPath } from "../../routes/paths";
 import { Link } from "react-router-dom";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 
@@ -18,7 +19,7 @@ export const WishCard = ({ id }) => {
   };
 
   return (
-    <Link to={`/product/${id}`} className="p-3 shadow-2xl relative rounded-xl">
+    <Link to={productPath(id)} className="p-3 shadow-2xl relative rounded-xl">
       <ImageComponent cardCss="w-full xl:h-[26vh] md:h-[20vh] h-[10vh] " />
       <div className="absolute top-4 right-4">
         <FavoriteIcon

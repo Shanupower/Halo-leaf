@@ -1,0 +1,61 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "A starter for Medusa projects.",
+  "author": "Medusa (https://medusajs.com)",
+  "license": "MIT",
+  "keywords": [
+    "sqlite",
+    "postgres",
+    "typescript",
+    "ecommerce",
+    "headless",
+    "medusa"
+  ],
+  "scripts": {
+    "build": "medusa build",
+    "seed": "medusa exec ./src/scripts/seed.ts",
+    "configure:india": "medusa exec ./src/scripts/configure-india.ts",
+    "fix:inr-currency": "medusa exec ./src/scripts/fix-inr-currency.ts",
+    "migrate:inr-major-units": "medusa exec ./src/scripts/migrate-inr-major-units.ts",
+    "seed:reviews": "medusa exec ./src/scripts/seed-product-reviews.ts",
+    "seed:demo-order": "medusa exec ./src/scripts/seed-demo-order.ts",
+    "create:demo-order": "medusa exec ./src/scripts/create-demo-order.ts",
+    "start": "medusa start",
+    "dev": "medusa develop",
+    "postinstall": "patch-package",
+    "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
+    "test:integration:modules": "TEST_TYPE=integration:modules NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
+    "test:unit": "TEST_TYPE=unit NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit"
+  },
+  "dependencies": {
+    "@medusajs/admin-sdk": "2.13.1",
+    "@medusajs/cli": "2.13.1",
+    "@medusajs/framework": "2.13.1",
+    "@medusajs/medusa": "2.13.1",
+    "medusa-plugin-razorpay-v2": "^0.1.4",
+    "medusa-shiprocket-fulfillment-sbl": "^0.0.26"
+  },
+  "devDependencies": {
+    "@medusajs/test-utils": "2.13.1",
+    "@swc/core": "^1.7.28",
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^20.12.11",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.2.25",
+    "jest": "^29.7.0",
+    "patch-package": "^8.0.1",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.14",
+    "yalc": "^1.0.0-pre.53"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "npm@10.9.2"
+}

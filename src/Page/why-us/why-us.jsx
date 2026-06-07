@@ -1,5 +1,7 @@
 // src/pages/WhyUs.jsx
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { PATHS } from '../../routes/paths';
 import './AboutUs.css';
 
 // Images removed from process section
@@ -169,9 +171,9 @@ We believe that sustainable living should be beautiful, practical, and accessibl
                   {index === timelineData.length - 1 && (
                     <div className="margin-bottom-xlarge">
                       <div className="inline-block">
-                        <a href="#contact" className="timeline_link inline-block">
+                        <Link to={PATHS.contact} className="timeline_link inline-block">
                           Partner With Us Today
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   )}

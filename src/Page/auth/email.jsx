@@ -23,8 +23,15 @@ export const EmailComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const otpBase = import.meta.env.VITE_OTP_SERVICE_URL;
+    if (!otpBase) {
+      toast.error(
+        "OTP is not configured. Set VITE_OTP_SERVICE_URL or use Medusa customer login."
+      );
+      return;
+    }
     try {
-      const res = await axios.post("http://127.0.0.1:5000/send-otp", {
+      const res = await axios.post(`${otpBase.replace(/\/$/, "")}/send-otp`, {
         email: email,
       });
 

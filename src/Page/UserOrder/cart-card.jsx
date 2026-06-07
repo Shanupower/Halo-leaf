@@ -1,34 +1,83 @@
-import { useEffect, useState } from "react";
-import ImageComponent from "../../component/image/ImageComponent";
+import { productPath } from "../../routes/paths";
 import { Link } from "react-router-dom";
+import ImageComponent from "../../component/image/ImageComponent";
+import { buildImageUrl } from "../../utils/media";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeFromCart,
+  updateCartItemQuantity,
+} from "../../feature/leafSlice";
 
-export const CartCard = ({ id, setOrderValue, item }) => {
-  const handleOderSubmit = (e) => {
-    e?.stopPropagation();
-    setOrderValue(1);
-  };
+export const CartCard = ({ id, item }) => {
+  const dispatch = useDispatch();
+  const { cartSyncing } = useSelector((state) => state.leaf);
+  const thumb =
+    item?.image?.[0]?.formats?.thumbnail?.url || item?.image?.[0]?.url;
+  const quantity = item?.quantity || 1;
+  const unitPrice = Number(item?.OrigialPrice ?? item?.price ?? 0);
+  const subtotal = unitPrice * quantity;
+  const itemProductPath = productPath(item?.documentId || item?.id);
 
   return (
-    <div className="p-3 shadow-2xl  rounded-xl">
-      <Link to={`/product/${item?.documentId}`} className="p-3">
+    <article className="rounded-[1.5rem] border border-green-100 bg-white p-4 shadow-sm">
+      <div className="grid gap-4 sm:grid-cols-[120px_1fr]">
+      <Link to={itemProductPath} className="block overflow-hidden rounded-2xl bg-[#f7fbf4]">
         <ImageComponent
           key={id}
-          src={`${import.meta.env.VITE_Image_BASE_URL}${
-            item?.image[0].formats.thumbnail.url
-          }`}
-          cardCss="w-full h-[26vh]"
+          src={buildImageUrl(thumb) || "/placeholder.png"}
+          cardCss="h-32 w-full"
+          imgCss="h-full w-full object-contain p-4"
         />
       </Link>
 
-      <div className="px-2 pt-2">
-        <h3 className="text-center text-xl">GS-4322</h3>
-        <button
-          onClick={(e) => handleOderSubmit(e)}
-          className="bg-blue-800 w-full text-white mt-2 py-2 rounded-md cursor-pointer"
-        >
-          Order Now
-        </button>
+      <div className="min-w-0">
+        <Link to={itemProductPath}>
+          <h3 className="line-clamp-2 text-lg font-bold text-gray-950 transition hover:text-green-800">
+            {item?.title || "Product"}
+          </h3>
+        </Link>
+        <p className="mt-1 text-sm text-gray-500">
+          ₹{unitPrice.toFixed(2)} × {quantity}
+        </p>
+        <p className="mt-2 font-bold text-green-800">
+          Subtotal: ₹{subtotal.toFixed(2)}
+        </p>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="flex items-center overflow-hidden rounded-full border border-green-100">
+          <button
+            type="button"
+            disabled={cartSyncing || quantity <= 1}
+            onClick={() =>
+              dispatch(updateCartItemQuantity({ id: item.id, quantity: quantity - 1 }))
+            }
+            className="px-4 py-2 font-semibold disabled:opacity-40"
+          >
+            -
+          </button>
+          <span className="border-x border-green-100 px-4 py-2">{quantity}</span>
+          <button
+            type="button"
+            disabled={cartSyncing}
+            onClick={() =>
+              dispatch(updateCartItemQuantity({ id: item.id, quantity: quantity + 1 }))
+            }
+            className="px-4 py-2 font-semibold disabled:opacity-40"
+          >
+            +
+          </button>
+          </div>
+          <button
+            type="button"
+            disabled={cartSyncing}
+            onClick={() => dispatch(removeFromCart(item.id))}
+            className="rounded-full border border-red-100 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-40"
+          >
+            Remove
+          </button>
+        </div>
       </div>
-    </div>
+      </div>
+    </article>
   );
 };

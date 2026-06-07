@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { PATHS } from "../../routes/paths";
 
 const categories = [
   "LEAF PLATES",
@@ -48,13 +50,13 @@ export const Hero = () => {
       {/* Hero content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center text-white pt-28">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-shadow">
-        Sustainable Dining: Nature's Perfect Solution
+        Leaf Plates &amp; Tableware for Sustainable Dining
         </h1>
         
         {/* Static + Animated Part */}
         <div className="text-xl md:text-3xl font-medium text-green-200 mb-6 flex justify-center">
   <div className="inline-flex items-center gap-2">
-    <span>We provide solutions in</span>
+    <span>Handcrafted areca leaf</span>
     <span
       className="relative inline-block"
       style={{ minWidth: "28ch", textAlign: "left" }}
@@ -75,24 +77,24 @@ export const Hero = () => {
 </div>
 
         <div className="mt-6 flex flex-col md:flex-row gap-4 justify-left">
-          <a
-            href="/product"
+          <Link
+            to={PATHS.products}
             className="px-6 py-3 bg-white text-green-700 rounded-full font-semibold hover:bg-green-100 transition"
           >
             See Products
-          </a>
-          <a
-            href="/contact-us"
+          </Link>
+          <Link
+            to={PATHS.contact}
             className="px-6 py-3 border border-white rounded-full font-semibold hover:bg-white hover:text-green-700 transition"
           >
             Contact Us
-          </a>
+          </Link>
         </div>
 
         {/* Scroll Down Button */}
         <button
           onClick={() => {
-            const nextSection = document.getElementById("best-sell-section");
+            const nextSection = document.getElementById("categories-section");
             if (nextSection) nextSection.scrollIntoView({ behavior: "smooth" });
           }}
           className="absolute bottom-10 animate-bounce"

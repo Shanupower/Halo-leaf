@@ -1,43 +1,91 @@
-import { useEffect, useState } from "react";
 import ImageComponent from "../../component/image/ImageComponent";
 import { Link } from "react-router-dom";
+import { productPath as buildProductPath } from "../../routes/paths";
+import { buildImageUrl } from "../../utils/media";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeFromCart,
+  updateCartItemQuantity,
+} from "../../feature/leafSlice";
 
-export const CartCard = ({ id, item }) => {
+export const CartCard = ({ item }) => {
+  const dispatch = useDispatch();
+  const { cartSyncing } = useSelector((state) => state.leaf);
+  const imageUrl =
+    item?.image?.[0]?.formats?.thumbnail?.url || item?.image?.[0]?.url;
+  const quantity = item?.quantity || 1;
+  const unitPrice = Number(item?.OrigialPrice || item?.price || 0);
+  const subtotal = unitPrice * quantity;
+  const itemProductPath = buildProductPath(item?.documentId || item?.id);
+
+  const updateQuantity = (nextQuantity) => {
+    dispatch(updateCartItemQuantity({ id: item.id, quantity: nextQuantity }));
+  };
+
+  const removeItem = () => {
+    dispatch(removeFromCart(item.id));
+  };
+
   return (
-    <>
+    <article className="overflow-hidden rounded-[1.5rem] border border-green-100 bg-white p-4 shadow-sm transition hover:shadow-md">
+      <div className="grid gap-4 sm:grid-cols-[140px_1fr]">
       <Link
-        to={`/product/${item?.documentId}`}
-        className="p-3 shadow-2xl  rounded-xl"
+        to={itemProductPath}
+        className="block overflow-hidden rounded-2xl bg-[#f7fbf4]"
       >
-        <div className="flex justify-center items-center gap-3">
-          {item?.image &&
-            item?.image.length > 0 &&
-            item?.image?.map((img, index) => (
-              <ImageComponent
-                key={index}
-                src={`${import.meta.env.VITE_Image_BASE_URL}${img?.url}`}
-                cardCss="w-full xl:h-[36vh] md:h-[25vh] h-[12vh] bg-gray-200 rounded-lg p-4"
-              />
-            ))}
-        </div>
+          <ImageComponent
+            src={buildImageUrl(imageUrl) || "/placeholder.png"}
+            cardCss="h-36 w-full"
+            imgCss="h-full w-full object-contain p-4"
+          />
       </Link>
-      <div className="px-2 pt-2">
-        <h3 className="text-center  flex items-center justify-between ">
-          <p>
-            {" "}
-            ₹ <b>{item?.OrigialPrice}</b>
-          </p>{" "}
-          <p>{item?.title}</p>
-        </h3>
-        <div className="flex items-center justify-between mt-2 ">
-          <Link
-            to="/order"
-            className="bg-blue-800  text-center w-full text-white mt-2 py-2 rounded-md cursor-pointer"
-          >
-            Order Now
+
+      <div className="flex min-w-0 flex-col justify-between gap-4">
+        <div>
+          <Link to={itemProductPath}>
+            <h3 className="line-clamp-2 text-lg font-bold text-gray-950 transition hover:text-green-800">
+              {item?.title || "Product"}
+            </h3>
           </Link>
+          <p className="mt-1 text-sm text-gray-500">
+            Unit price: ₹{unitPrice.toFixed(2)}
+          </p>
+          <p className="mt-2 text-lg font-bold text-green-800">
+            Subtotal: ₹{subtotal.toFixed(2)}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center overflow-hidden rounded-full border border-green-100 bg-white">
+            <button
+              type="button"
+              disabled={cartSyncing || quantity <= 1}
+              onClick={() => updateQuantity(quantity - 1)}
+              className="px-4 py-2 font-semibold disabled:opacity-40"
+            >
+              -
+            </button>
+            <span className="border-x border-green-100 px-4 py-2">{quantity}</span>
+            <button
+              type="button"
+              disabled={cartSyncing}
+              onClick={() => updateQuantity(quantity + 1)}
+              className="px-4 py-2 font-semibold disabled:opacity-40"
+            >
+              +
+            </button>
+          </div>
+          <button
+            type="button"
+            disabled={cartSyncing}
+            onClick={removeItem}
+            className="rounded-full border border-red-100 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-40"
+          >
+            Remove
+          </button>
         </div>
       </div>
-    </>
+      </div>
+    </article>
   );
 };

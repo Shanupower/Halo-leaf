@@ -4,7 +4,7 @@ export const About = () => {
   const [hoveredCircle, setHoveredCircle] = useState(null);
 
   return (
-    <div className="py-8 md:py-16 px-4 md:px-8 max-w-6xl mx-auto relative">
+    <div id="about" className="py-8 md:py-16 px-4 md:px-8 max-w-6xl mx-auto relative">
       {/* Vertical connecting lines - broken into segments */}
       {/* Line segment 1: Above "Our vision" */}
       <div className="absolute left-1/2 top-4 md:top-8 w-px bg-gray-300 transform -translate-x-1/2 z-0 h-8 md:h-16"></div>

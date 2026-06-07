@@ -1,0 +1,178 @@
+diff --git a/node_modules/medusa-plugin-razorpay-v2/.medusa/server/src/providers/payment-razorpay/src/core/razorpay-base.js b/node_modules/medusa-plugin-razorpay-v2/.medusa/server/src/providers/payment-razorpay/src/core/razorpay-base.js
+index 3657949..3f7d0a1 100644
+--- a/node_modules/medusa-plugin-razorpay-v2/.medusa/server/src/providers/payment-razorpay/src/core/razorpay-base.js
++++ b/node_modules/medusa-plugin-razorpay-v2/.medusa/server/src/providers/payment-razorpay/src/core/razorpay-base.js
+@@ -12,11 +12,20 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+         super(container, options);
+         this.options_ = options;
+         this.logger = container[utils_1.ContainerRegistrationKeys.LOGGER];
+-        this.paymentService = container[utils_1.Modules.PAYMENT];
+         this.container_ = container;
+         this.options_ = options;
+         this.init();
+     }
++    getRazorpayNote(notes, key) {
++        if (!notes || Array.isArray(notes)) {
++            return undefined;
++        }
++        return notes[key];
++    }
++    getPaymentSessionIdFromInput(razorpayOrder, context) {
++        return (this.getRazorpayNote(razorpayOrder?.notes, "medusa_payment_session_id") ??
++            context?.idempotency_key);
++    }
+     init() {
+         const provider = this.options_.providers?.find((p) => p.id === RazorpayBase.identifier);
+         if (!provider && !this.options_.key_id) {
+@@ -84,14 +93,27 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+             ...input
+         };
+         const status = await this.getPaymentStatus(paymentStatusRequest);
+-        const result = await this.syncPaymentSession(paymentSession.id, razorpayOrder.id);
++        let orderForReturn = razorpayOrder;
++        try {
++            if (razorpayOrder.status === "created") {
++                const result = await this.syncPaymentSession(paymentSession.id, razorpayOrder.id);
++                orderForReturn = result.razorpayOrder;
++            }
++            else {
++                orderForReturn = await this.razorpay_.orders.fetch(razorpayOrder.id);
++            }
++        }
++        catch (error) {
++            this.logger.warn(`Razorpay order note sync skipped: ${error.message}`);
++            orderForReturn = await this.razorpay_.orders.fetch(razorpayOrder.id);
++        }
+         if (status.status === utils_1.PaymentSessionStatus.AUTHORIZED &&
+             this.options_.auto_capture) {
+             status.status = utils_1.PaymentSessionStatus.CAPTURED;
+         }
+         return {
+             data: {
+-                razorpayOrder: result.razorpayOrder
++                razorpayOrder: orderForReturn
+             },
+             status: status.status
+         };
+@@ -134,12 +156,13 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+             }
+         }
+         let { razorpayOrder } = data;
+-        const paymentSessionId = razorpayOrder?.notes
+-            ?.medusa_payment_session_id ?? context?.idempotency_key;
+-        const paymentSession = await this.paymentService.retrievePaymentSession(paymentSessionId);
++        const paymentSessionId = this.getPaymentSessionIdFromInput(razorpayOrder, context);
++        if (!paymentSessionId) {
++            throw new utils_1.MedusaError(utils_1.MedusaError.Types.INVALID_DATA, "Payment session ID is required");
++        }
++        const paymentSession = { id: paymentSessionId };
+         if (!razorpayOrder) {
+-            razorpayOrder = paymentSession?.data
+-                ?.razorpayOrder;
++            razorpayOrder = data?.razorpayOrder;
+         }
+         if (razorpayOrder) {
+             const razorpayOrder_latest = await this.razorpay_.orders.fetch(razorpayOrder.id);
+@@ -173,14 +196,18 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+         const orderData = await this.updateRazorpayOrderMetadata(razorpayOrderId, {
+             medusa_payment_session_id: paymentSessionId
+         });
+-        const paymentSessionData = await this.paymentService.retrievePaymentSession(paymentSessionId);
+         return {
+             razorpayOrder: orderData,
+-            paymentSession: paymentSessionData
++            paymentSession: { id: paymentSessionId }
+         };
+     }
+     getToPay(amount, currency_code) {
+-        return Math.round((0, get_smallest_unit_1.getAmountFromSmallestUnit)(Math.round(parseInt(amount.toString(), 10)), currency_code.toUpperCase()) * 100 * 100);
++        // Medusa v2 amounts are major units; Razorpay expects paise.
++        const minor = (0, get_smallest_unit_1.getSmallestUnit)(amount, currency_code.toUpperCase());
++        if (minor == null || Number.isNaN(minor)) {
++            throw new utils_1.MedusaError(utils_1.MedusaError.Types.INVALID_DATA, "Invalid payment amount");
++        }
++        return minor;
+     }
+     async initiatePayment(input) {
+         const paymentSessionId = input.context?.idempotency_key;
+@@ -188,10 +215,18 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+         const toPay = this.getToPay(amount, currency_code);
+         try {
+             const razorpayOrderCreateRequest = this.getRazorpayOrderCreateRequestBody(toPay, currency_code);
+-            const razorpayOrder = await this.razorpay_.orders.create(razorpayOrderCreateRequest);
++            let razorpayOrder = await this.razorpay_.orders.create(razorpayOrderCreateRequest);
+             if (!paymentSessionId) {
+                 throw new utils_1.MedusaError(utils_1.MedusaError.Types.INVALID_DATA, "Payment session ID is required");
+             }
++            try {
++                razorpayOrder = await this.updateRazorpayOrderMetadata(razorpayOrder.id, {
++                    medusa_payment_session_id: paymentSessionId
++                });
++            }
++            catch (error) {
++                this.logger.warn(`Could not attach Medusa payment session to Razorpay order: ${error.message}`);
++            }
+             return {
+                 id: paymentSessionId,
+                 data: { razorpayOrder: razorpayOrder }
+@@ -284,7 +319,9 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+                 status = utils_1.PaymentSessionStatus.REQUIRES_MORE;
+                 break;
+             case "paid":
+-                status = utils_1.PaymentSessionStatus.AUTHORIZED;
++                status = (this.options_.auto_capture ?? true)
++                    ? utils_1.PaymentSessionStatus.CAPTURED
++                    : utils_1.PaymentSessionStatus.AUTHORIZED;
+                 break;
+             case "attempted":
+                 status = await this.getRazorpayPaymentStatus(paymentIntent, paymentsAttempted);
+@@ -299,13 +336,16 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+             return utils_1.PaymentSessionStatus.ERROR;
+         }
+         else {
+-            const authorisedAttempts = attempts.items.filter((i) => i.status === utils_1.PaymentSessionStatus.AUTHORIZED);
++            const authorisedAttempts = attempts.items.filter((i) => i.status === "authorized" || i.status === "captured");
+             const totalAuthorised = authorisedAttempts.reduce((p, c) => {
+                 const data = p + parseInt(`${c.amount}`, 10);
+                 return data;
+             }, 0);
+             return totalAuthorised === paymentIntent.amount
+-                ? utils_1.PaymentSessionStatus.AUTHORIZED
++                ? authorisedAttempts.some((i) => i.status === "captured") &&
++                  (this.options_.auto_capture ?? true)
++                    ? utils_1.PaymentSessionStatus.CAPTURED
++                    : utils_1.PaymentSessionStatus.AUTHORIZED
+                 : utils_1.PaymentSessionStatus.REQUIRES_MORE;
+         }
+     }
+@@ -429,10 +469,28 @@ class RazorpayBase extends utils_1.AbstractPaymentProvider {
+     async createAccountHolder(input) {
+         const { first_name, last_name, email, phone, billing_address } = input
+             .context.customer;
++        const cleanPart = (value, fallback) => {
++            const cleaned = (value || "")
++                .trim()
++                .replace(/[^a-zA-Z\s]/g, "")
++                .replace(/\s+/g, " ");
++            return cleaned.length >= 2 ? cleaned : fallback;
++        };
++        const first = cleanPart(first_name, "Customer");
++        let last = cleanPart(last_name, "");
++        if (!last || last === "-" || last.length < 2) {
++            const extra = first.split(" ").slice(1).join(" ");
++            last = extra.length >= 2 ? extra : "User";
++        }
++        const name = `${first} ${last}`.trim();
++        const contact = (phone || billing_address?.phone || "")
++            .toString()
++            .replace(/\D/g, "")
++            .slice(-10);
+         const accountHolder = await this.razorpay_.customers.create({
+-            name: `${first_name} ${last_name}`,
++            name,
+             email: email,
+-            contact: phone ?? undefined,
++            contact: contact || undefined,
+             gstin: billing_address?.metadata?.gstin,
+             notes: {
+                 medusa_account_holder_id: "NA"

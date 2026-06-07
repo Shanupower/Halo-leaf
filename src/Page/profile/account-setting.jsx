@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Tabs, Tab, TextField, Button, Box, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdateUserDetails } from "../../feature/leafSlice";
 import { toast } from "react-toastify";
+
+const fields = [
+  { name: "name", label: "Full name" },
+  { name: "email", label: "Email address", type: "email" },
+  { name: "phone", label: "Phone number", type: "tel" },
+  { name: "alternatePhone", label: "Alternate phone", type: "tel" },
+];
+
 export const AccountSetting = () => {
   const [editMode, setEditMode] = useState(false);
   const user = useSelector((state) => state.leaf.user);
@@ -13,9 +20,6 @@ export const AccountSetting = () => {
     phone: "",
     alternatePhone: "",
   });
-  const handleChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
-  };
 
   useEffect(() => {
     if (user) {
@@ -27,91 +31,64 @@ export const AccountSetting = () => {
       });
     }
   }, [user]);
+
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
   const handleEdit = () => {
-    setEditMode(!editMode);
+    setEditMode((prev) => !prev);
   };
 
   const handleSave = () => {
     dispatch(UpdateUserDetails({ id: user?.id, data: formData }))
       .unwrap()
-      .then((res) => {
-        toast.success("User details updated successfully!");
+      .then(() => {
+        toast.success("Profile updated successfully.");
         setEditMode(false);
       })
       .catch((err) => {
-        toast.error(err?.message || "Failed to update user details", {
-          position: "top-right",
-        });
+        toast.error(err?.message || "Failed to update profile.");
       });
   };
+
   return (
-    <div className="bg-[#f5f5f5] pt-6 flex items-center justify-center py-5  w-full">
-      <div className="sm:w-[60%] w-full sm:p-0 px-6">
-        <div className="flex items-center gap-4">
-          <p className="text-gray-500 md:text-md hidden md:block ">
-            NAME:
-          </p>
-          <TextField
-            fullWidth
-            disabled={!editMode}
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="bg-[#e0e0e0] border-none"
-          />
-        </div>
+    <div className="p-6 sm:p-8">
+      <div className="mx-auto max-w-xl space-y-5">
+        {fields.map((field) => (
+          <label key={field.name} className="block">
+            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+              {field.label}
+            </span>
+            <input
+              type={field.type || "text"}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              disabled={!editMode}
+              className="w-full rounded-xl border border-green-100 bg-[#f7fbf4] px-4 py-3 text-gray-900 outline-none transition focus:border-green-700 disabled:cursor-not-allowed disabled:opacity-80"
+            />
+          </label>
+        ))}
 
-        <div className="flex items-center gap-4 my-4">
-          <p className="text-gray-500 md:block hidden ">
-            EMAIL ADDRESS:
-          </p>
-          <TextField
-            fullWidth
-            disabled={!editMode}
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="bg-[#e0e0e0] border-none"
-          />
-        </div>
-
-        <div className="flex items-center gap-4">
-          <p className="text-gray-500 md:block hidden ">
-            PHONE NUMBER:
-          </p>
-          <TextField
-            fullWidth
-            disabled={!editMode}
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="bg-[#e0e0e0] border-none"
-          />
-        </div>
-        <div className="flex items-center gap-4 my-4">
-          <p className="text-gray-500 md:block hidden  ">
-            ALTERNATE PHONE NUMBER:
-          </p>
-          <TextField
-            fullWidth
-            disabled={!editMode}
-            name="alternatePhone"
-            value={formData.alternatePhone}
-            onChange={handleChange}
-            className="bg-[#e0e0e0] border-none"
-          />
-        </div>
-
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-          <Button onClick={handleEdit} sx={{ color: "blue" }}>
-            {editMode ? "Cancel" : "Edit"}
-          </Button>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <button
+            type="button"
+            onClick={handleEdit}
+            className="rounded-full border border-green-200 px-5 py-2.5 text-sm font-semibold text-green-800 transition hover:border-green-700"
+          >
+            {editMode ? "Cancel" : "Edit profile"}
+          </button>
           {editMode && (
-            <Button onClick={handleSave} sx={{ color: "blue" }}>
-              Save
-            </Button>
+            <button
+              type="button"
+              onClick={handleSave}
+              className="rounded-full bg-green-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gray-950"
+            >
+              Save changes
+            </button>
           )}
-        </Box>
+        </div>
       </div>
     </div>
   );

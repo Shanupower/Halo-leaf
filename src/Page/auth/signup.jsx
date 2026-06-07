@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { createUserData } from "../../feature/leafSlice";
 import { fetchUserData } from "../../helper/helper";
+import { PATHS } from "../../routes/paths";
 export const Signup = () => {
   const [user, setUser] = useState({
     name: "",
@@ -24,7 +25,7 @@ export const Signup = () => {
   useEffect(() => {
     const { access_leaf } = fetchUserData();
     if (access_leaf) {
-      navigate("/");
+      navigate(PATHS.home);
     }
   }, []);
   const handleChange = ({ target }) => {
@@ -45,19 +46,21 @@ export const Signup = () => {
 
     dispatch(createUserData(user))
       .unwrap()
-      .then((res) => {
-        toast.success("Signup successful!");
-        navigate("/address");
+      .then(() => {
+        toast.success("Signup successful!", { toastId: "auth-success" });
+        navigate(PATHS.home);
       })
       .catch((err) => {
-        toast.error(` ${err?.error?.message || "Signup failed!"}`);
+        const msg =
+          typeof err === "string" ? err : err?.message || "Signup failed!";
+        toast.error(msg);
       });
   };
 
   return (
-    <div className="  flex flex-col items-center py-6">
-      <div className="sm:w-[440px]  w-[320px] bg-primaryw ">
-        <div className=" shadow-2xl rounded-xl px-4 py-6 w-full form_section">
+    <div className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center px-4 py-8 pb-12">
+      <div className="w-full max-w-[440px] bg-primaryw sm:w-[440px]">
+        <div className="form_section w-full rounded-xl px-4 py-6 shadow-2xl">
           <>
             <h2 className="text-2xl text-center text-black  font-semibold">
               Create Account
@@ -127,9 +130,10 @@ export const Signup = () => {
               />
               <button
                 type="submit"
-                className={`bg-primary cursor-pointer w-full mt-8 py-3 rounded-xl text-white ${
-                  loading && "cursor-not-allowed"
+                className={`mt-8 w-full scroll-mb-8 cursor-pointer rounded-xl bg-green-700 py-3 text-white transition hover:bg-gray-950 ${
+                  loading ? "cursor-not-allowed opacity-50" : ""
                 }`}
+                disabled={loading}
               >
                 {loading ? "Loading.." : "Sign Up"}
               </button>

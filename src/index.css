@@ -27,6 +27,16 @@ p {
   
 }
 
+.Toastify__toast-container {
+  top: auto;
+  bottom: 1rem;
+  pointer-events: none;
+}
+
+.Toastify__toast {
+  pointer-events: auto;
+}
+
 /* Flip Card Styles */
 .flip-card {
   background-color: transparent;

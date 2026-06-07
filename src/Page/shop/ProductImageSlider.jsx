@@ -10,7 +10,17 @@ const ProductImageSlider = ({ images }) => {
     }
   }, [images]);
 
-  if (!images || images.length === 0) return null;
+  if (!images || images.length === 0) {
+    return (
+      <div className="image-slider-wrapper">
+        <img
+          src="/placeholder.png"
+          alt="Product"
+          className="main-image max-h-[420px] w-full object-contain"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="image-slider-wrapper">
